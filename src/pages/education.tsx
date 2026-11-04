@@ -37,14 +37,14 @@ export function EducationPage() {
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-10">
       <header>
-        <p className="text-sm font-semibold uppercase tracking-wider text-primary">{E.eyebrow}</p>
-        <h1 className="mt-2 text-3xl font-extrabold sm:text-4xl">{E.title}</h1>
+        <p className="label-mono text-primary">{E.eyebrow}</p>
+        <h1 className="mt-2 text-3xl font-semibold sm:text-4xl">{E.title}</h1>
         <p className="mt-3 max-w-2xl text-muted-foreground">{E.subtitle}</p>
       </header>
 
       {rec && (
         <section aria-labelledby="trails-title">
-          <h2 id="trails-title" className="text-2xl font-extrabold">
+          <h2 id="trails-title" className="text-2xl font-semibold">
             {E.trailsTitle}
           </h2>
           <p className="mt-1 text-muted-foreground">{E.trailsSubtitle}</p>
@@ -83,7 +83,7 @@ export function EducationPage() {
 
       {TOPICS.length > 0 && (
         <section aria-labelledby="topics-title">
-          <h2 id="topics-title" className="text-2xl font-extrabold">
+          <h2 id="topics-title" className="text-2xl font-semibold">
             {E.topicsTitle}
           </h2>
           <p className="mt-1 text-muted-foreground">{E.topicsSubtitle}</p>
@@ -108,7 +108,7 @@ export function EducationPage() {
       )}
 
       <section aria-labelledby="guides-title">
-        <h2 id="guides-title" className="text-2xl font-extrabold">
+        <h2 id="guides-title" className="text-2xl font-semibold">
           {E.areasTitle}
         </h2>
         <p className="mt-1 text-muted-foreground">{E.areasSubtitle}</p>
@@ -131,7 +131,7 @@ export function EducationPage() {
       </section>
 
       <section aria-labelledby="coming-title">
-        <h2 id="coming-title" className="text-xl font-extrabold">
+        <h2 id="coming-title" className="text-xl font-semibold">
           {E.comingTitle}
         </h2>
         <ul className="mt-4 grid gap-3 md:grid-cols-3">
@@ -175,8 +175,8 @@ export function AreaGuidePage() {
         <Link to={paths.learn} className="inline-flex items-center gap-1 text-sm font-semibold text-primary">
           <ArrowLeft className="size-4" aria-hidden="true" /> {t.education.areaBack}
         </Link>
-        <p className="mt-4 text-sm font-semibold uppercase tracking-wider text-primary">{t.education.eyebrow}</p>
-        <h1 className="mt-2 text-3xl font-extrabold sm:text-4xl">{guide.title}</h1>
+        <p className="mt-4 label-mono text-primary">{t.education.eyebrow}</p>
+        <h1 className="mt-2 text-3xl font-semibold sm:text-4xl">{guide.title}</h1>
         <p className="mt-2 text-lg text-muted-foreground">{guide.summary}</p>
       </div>
       {guide.sections.map((s) => (
@@ -217,8 +217,8 @@ export function TopicPage() {
         <Link to={paths.learn} className="inline-flex items-center gap-1 text-sm font-semibold text-primary">
           <ArrowLeft className="size-4" aria-hidden="true" /> {E.areaBack}
         </Link>
-        <p className="mt-4 text-sm font-semibold uppercase tracking-wider text-primary">{E.eyebrow}</p>
-        <h1 className="mt-2 text-3xl font-extrabold sm:text-4xl">{topic.title}</h1>
+        <p className="mt-4 label-mono text-primary">{E.eyebrow}</p>
+        <h1 className="mt-2 text-3xl font-semibold sm:text-4xl">{topic.title}</h1>
         <p className="mt-2 text-lg text-muted-foreground">{topic.summary}</p>
       </div>
       {intro && (
@@ -229,7 +229,7 @@ export function TopicPage() {
       )}
       {topic.courses.length > 0 && (
         <section aria-labelledby="courses-title">
-          <h2 id="courses-title" className="text-xl font-extrabold">
+          <h2 id="courses-title" className="text-xl font-semibold">
             {E.coursesTitle}
           </h2>
           <p className="mt-1 text-sm text-muted-foreground">{E.coursesSubtitle}</p>

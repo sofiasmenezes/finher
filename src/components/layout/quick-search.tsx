@@ -84,7 +84,7 @@ export function QuickSearch({ className }: { className?: string }) {
         type="button"
         onClick={open}
         className={cn(
-          "flex h-10 items-center gap-2 border border-input bg-card px-3 text-sm text-muted-foreground transition-colors hover:border-foreground",
+          "flex h-10 items-center gap-2 rounded-full border border-input bg-card px-4 text-sm text-muted-foreground transition-colors hover:border-primary",
           className,
         )}
       >
@@ -98,7 +98,7 @@ export function QuickSearch({ className }: { className?: string }) {
         ref={dialogRef}
         aria-label={S.label}
         onClick={(e) => e.target === dialogRef.current && close()}
-        className="m-auto mt-[12vh] w-[min(40rem,calc(100vw-2rem))] border bg-card p-0 text-foreground shadow-2xl backdrop:bg-navy/50"
+        className="m-auto mt-[12vh] w-[min(40rem,calc(100vw-2rem))] rounded-2xl border bg-card p-0 text-foreground shadow-2xl backdrop:bg-navy/50"
       >
         <div className="flex items-center gap-2 border-b px-4">
           <Search className="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
@@ -147,10 +147,10 @@ export function QuickSearch({ className }: { className?: string }) {
                   aria-selected={i === active}
                   onMouseEnter={() => setActive(i)}
                   onClick={() => go(r)}
-                  className={cn("flex cursor-pointer items-center gap-3 px-3 py-3", i === active && "bg-accent")}
+                  className={cn("flex cursor-pointer items-center gap-3 rounded-xl px-3 py-3", i === active && "bg-accent")}
                 >
                   <span className="flex min-w-0 flex-1 flex-col">
-                    <span className="font-mono text-[0.68rem] uppercase tracking-widest text-primary">{S.kinds[r.kind]}</span>
+                    <span className="label-mono text-[0.65rem] text-primary">{S.kinds[r.kind]}</span>
                     <span className="font-semibold">{r.title}</span>
                     <span className="truncate text-sm text-muted-foreground">{r.summary}</span>
                   </span>

@@ -19,8 +19,8 @@ export default function CommunityPage() {
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-10">
       <header>
-        <p className="text-sm font-semibold uppercase tracking-wider text-primary">{C.eyebrow}</p>
-        <h1 className="mt-2 text-3xl font-extrabold sm:text-4xl">{C.title}</h1>
+        <p className="label-mono text-primary">{C.eyebrow}</p>
+        <h1 className="mt-2 text-3xl font-semibold sm:text-4xl">{C.title}</h1>
         <p className="mt-3 max-w-2xl text-muted-foreground">{C.subtitle}</p>
         <p role="note" className="mt-5 max-w-2xl rounded-xl border border-cta/50 bg-cta/10 p-4 text-sm font-medium">
           {C.soonNote}
@@ -28,7 +28,7 @@ export default function CommunityPage() {
       </header>
 
       <section aria-labelledby="planned-title">
-        <h2 id="planned-title" className="text-2xl font-extrabold">
+        <h2 id="planned-title" className="text-2xl font-semibold">
           {C.plannedTitle}
         </h2>
         <ul className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -46,7 +46,7 @@ export default function CommunityPage() {
       </section>
 
       <section aria-labelledby="samples-title">
-        <h2 id="samples-title" className="text-2xl font-extrabold">
+        <h2 id="samples-title" className="text-2xl font-semibold">
           {C.samplesTitle}
         </h2>
         <p className="mt-1 text-sm text-muted-foreground">{C.samplesNote}</p>

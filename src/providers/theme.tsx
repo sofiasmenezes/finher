@@ -20,9 +20,9 @@ function apply(pref: ThemePref) {
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState<ThemePref>(() => {
     try {
-      return (localStorage.getItem(KEY) as ThemePref) || "system";
+      return (localStorage.getItem(KEY) as ThemePref) || "light";
     } catch {
-      return "system";
+      return "light";
     }
   });
 

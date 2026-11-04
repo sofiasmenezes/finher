@@ -63,8 +63,8 @@ export default function OverviewPage({ profile }: { profile: Profile & Onboardin
       {/* Where you are */}
       <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-wider text-primary">{V.eyebrow}</p>
-          <h1 className="mt-2 text-3xl font-extrabold sm:text-4xl">
+          <p className="label-mono text-primary">{V.eyebrow}</p>
+          <h1 className="mt-2 text-3xl font-semibold sm:text-4xl">
             {profile.displayName ? fmt(V.greeting, { name: profile.displayName }) : V.greetingNoName}
           </h1>
           <div className="mt-3 flex flex-wrap gap-2">
@@ -81,7 +81,7 @@ export default function OverviewPage({ profile }: { profile: Profile & Onboardin
 
       {/* Next steps: an ordered sequence */}
       <section aria-labelledby="next-title" className="rounded-3xl bg-navy p-6 text-navy-foreground sm:p-8">
-        <h2 id="next-title" className="text-2xl font-extrabold">
+        <h2 id="next-title" className="text-2xl font-semibold">
           {V.nextTitle}
         </h2>
         <ol className="mt-5 grid gap-3 md:grid-cols-2">
@@ -91,7 +91,7 @@ export default function OverviewPage({ profile }: { profile: Profile & Onboardin
                 to={stepLink(s)}
                 className="group flex h-full items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.05] p-4 transition-colors hover:bg-white/[0.09]"
               >
-                <span className="grid size-9 shrink-0 place-items-center rounded-full bg-cta font-display font-extrabold text-cta-foreground">
+                <span className="grid size-9 shrink-0 place-items-center rounded-full bg-cta font-display font-semibold text-cta-foreground">
                   {i + 1}
                 </span>
                 <span className="flex-1 font-medium">{stepText(t, s)}</span>
@@ -115,7 +115,7 @@ export default function OverviewPage({ profile }: { profile: Profile & Onboardin
 
         <section aria-labelledby="journeys-title" className="flex flex-col gap-3">
           <div>
-            <h2 id="journeys-title" className="text-xl font-extrabold">
+            <h2 id="journeys-title" className="text-xl font-semibold">
               {V.journeysTitle}
             </h2>
             <p className="text-sm text-muted-foreground">{V.journeysSubtitle}</p>
@@ -146,7 +146,7 @@ export default function OverviewPage({ profile }: { profile: Profile & Onboardin
 
       {/* Market areas */}
       <section aria-labelledby="areas-title">
-        <h2 id="areas-title" className="text-2xl font-extrabold">
+        <h2 id="areas-title" className="text-2xl font-semibold">
           {V.areasTitle}
         </h2>
         <p className="mt-1 text-muted-foreground">{V.areasSubtitle}</p>
@@ -176,7 +176,7 @@ export default function OverviewPage({ profile }: { profile: Profile & Onboardin
 
       {/* Connections (samples until the community opens) */}
       <section aria-labelledby="conn-title">
-        <h2 id="conn-title" className="text-2xl font-extrabold">
+        <h2 id="conn-title" className="text-2xl font-semibold">
           {V.connectionsTitle}
         </h2>
         <p className="mt-1 text-muted-foreground">{V.connectionsSubtitle}</p>
@@ -227,7 +227,7 @@ export default function OverviewPage({ profile }: { profile: Profile & Onboardin
       {/* About FinHer */}
       <section aria-labelledby="about-title" className="grid gap-6 lg:grid-cols-[1fr_1.4fr]">
         <div>
-          <h2 id="about-title" className="text-2xl font-extrabold">
+          <h2 id="about-title" className="text-2xl font-semibold">
             {V.aboutTitle}
           </h2>
           <p className="mt-3 max-w-prose text-muted-foreground">{V.aboutBody}</p>
@@ -235,7 +235,7 @@ export default function OverviewPage({ profile }: { profile: Profile & Onboardin
 
         <div className="flex flex-col gap-4">
           <div>
-            <h2 className="text-xl font-extrabold">{V.institutionsTitle}</h2>
+            <h2 className="text-xl font-semibold">{V.institutionsTitle}</h2>
             <p className="mt-1 text-sm text-muted-foreground">{V.institutionsSubtitle}</p>
           </div>
           {INSTITUTIONS.map((inst) => (

@@ -57,6 +57,8 @@ export const ptBR = {
   },
 
   landing: {
+    ticker: ["Aprender", "Desafios do trabalho", "Carreira e família", "Histórias reais", "Comunidade em breve", "Conteúdo educativo, sem recomendação de investimento"],
+    door: "Porta",
     hero: {
       eyebrow: "Para mulheres que querem entrar, permanecer e crescer no mercado financeiro",
       title: "Descubra onde você está. Encontre seu próximo passo.",
@@ -67,8 +69,8 @@ export const ptBR = {
       note: "Gratuito · Configuração em 2 minutos · Para estudantes e profissionais",
     },
     preview: {
-      title: "Seu caminho no FinHer",
-      sample: "Exemplo",
+      title: "Seu caminho",
+      sample: "Edição de exemplo",
       stageLabel: "Seu momento",
       stageValue: "Estudante buscando estágio",
       areasLabel: "Áreas de interesse",
@@ -105,6 +107,8 @@ export const ptBR = {
     pillars: {
       eyebrow: "O que você encontra",
       title: "Quatro portas, um caminho",
+      body:
+        "Ser interrompida em reunião, negociar salário, ver seu trabalho creditado a outra pessoa, conciliar carreira e maternidade. Essas situações são reais e têm caminho.",
       items: [
         {
           id: "learn",
@@ -125,39 +129,6 @@ export const ptBR = {
           id: "stories",
           title: "Histórias",
           body: "Mulheres do mercado contam como entraram, o que enfrentaram e o que aprenderam.",
-        },
-      ],
-    },
-    edge: {
-      eyebrow: "Por que FinHer",
-      title: "Desafios reais. Respostas práticas.",
-      body:
-        "Ser interrompida em reunião, negociar salário, ver seu trabalho creditado a outra pessoa, conciliar carreira e maternidade. Essas situações são reais e têm caminho. O FinHer transforma cada uma em um plano de ação.",
-      soon: "Em breve",
-      items: [
-        {
-          id: "navigator",
-          title: "Navegador de desafios",
-          body: "Escolha uma situação do trabalho e responda poucas perguntas. Receba um diagnóstico, estratégias com prós e contras, frases prontas para usar e como transformar isso em vantagem.",
-          soon: false,
-        },
-        {
-          id: "family",
-          title: "Carreira e família",
-          body: "Orientações opcionais para planejamento, gravidez no trabalho, licença e retorno, com informações gerais sobre seus direitos.",
-          soon: false,
-        },
-        {
-          id: "stories",
-          title: "Histórias reais",
-          body: "Mulheres do mercado contam como entraram, o que enfrentaram e o que aprenderam. Entrevistas feitas pela nossa equipe, com consentimento.",
-          soon: true,
-        },
-        {
-          id: "community",
-          title: "Conexão com quem já está lá",
-          body: "Estudantes e profissionais em momentos parecidos, e mulheres do mercado dispostas a orientar.",
-          soon: true,
         },
       ],
     },

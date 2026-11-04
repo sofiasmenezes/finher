@@ -271,8 +271,8 @@ export default function Onboarding() {
       </header>
 
       <main id="main" className="mx-auto max-w-3xl px-4 pb-28 pt-8 sm:px-6 sm:pt-12">
-        <p className="text-sm font-semibold uppercase tracking-wider text-primary">{O.title}</p>
-        <h1 ref={headingRef} tabIndex={-1} className="mt-2 text-3xl font-extrabold outline-none sm:text-4xl">
+        <p className="label-mono text-primary">{O.title}</p>
+        <h1 ref={headingRef} tabIndex={-1} className="mt-2 text-3xl font-semibold outline-none sm:text-4xl">
           {stepMeta.title}
         </h1>
         <p className="mt-2 text-muted-foreground">{stepMeta.subtitle}</p>

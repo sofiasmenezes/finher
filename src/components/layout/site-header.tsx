@@ -44,7 +44,7 @@ export function SiteHeader() {
               <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
                 <Link to="/login">{t.nav.login}</Link>
               </Button>
-              <Button asChild variant="cta" size="sm" className="hidden sm:inline-flex">
+              <Button asChild size="sm" className="hidden sm:inline-flex">
                 <Link to="/signup">{t.nav.signup}</Link>
               </Button>
             </>
@@ -83,7 +83,7 @@ export function SiteHeader() {
                 <Button asChild variant="outline">
                   <Link to="/login">{t.nav.login}</Link>
                 </Button>
-                <Button asChild variant="cta">
+                <Button asChild>
                   <Link to="/signup">{t.nav.signup}</Link>
                 </Button>
               </>

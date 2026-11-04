@@ -72,8 +72,8 @@ export function FamilyPage() {
   return (
     <div className="mx-auto flex max-w-5xl flex-col gap-10">
       <header>
-        <p className="text-sm font-semibold uppercase tracking-wider text-primary">{F.eyebrow}</p>
-        <h1 className="mt-2 text-3xl font-extrabold sm:text-4xl">{F.title}</h1>
+        <p className="label-mono text-primary">{F.eyebrow}</p>
+        <h1 className="mt-2 text-3xl font-semibold sm:text-4xl">{F.title}</h1>
         <p className="mt-3 max-w-2xl text-muted-foreground">{F.subtitle}</p>
         <p className="mt-4 flex max-w-2xl gap-3 rounded-xl bg-muted p-4 text-sm">
           <ShieldCheck className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />
@@ -93,7 +93,7 @@ export function FamilyPage() {
               >
                 <span
                   className={cn(
-                    "grid size-12 shrink-0 place-items-center rounded-full font-display text-lg font-extrabold",
+                    "grid size-12 shrink-0 place-items-center rounded-full font-display text-lg font-semibold",
                     total > 0 && count === total ? "bg-primary text-primary-foreground" : "bg-primary/10 text-primary",
                   )}
                   aria-hidden="true"
@@ -119,7 +119,7 @@ export function FamilyPage() {
       </ol>
 
       <section aria-labelledby="stories-title">
-        <h2 id="stories-title" className="text-xl font-extrabold">
+        <h2 id="stories-title" className="text-xl font-semibold">
           {F.stories}
         </h2>
         <div className="mt-4 grid gap-4 lg:grid-cols-2">
@@ -175,10 +175,10 @@ export function FamilyPhasePage() {
         <Link to={paths.family} className="inline-flex items-center gap-1 text-sm font-semibold text-primary">
           <ArrowLeft className="size-4" aria-hidden="true" /> {F.allPhases}
         </Link>
-        <p className="mt-4 text-sm font-semibold uppercase tracking-wider text-primary">
+        <p className="mt-4 label-mono text-primary">
           {F.eyebrow} · {fmt(F.phase, { n: idx + 1 })}
         </p>
-        <h1 className="mt-2 text-3xl font-extrabold sm:text-4xl">{phase.title}</h1>
+        <h1 className="mt-2 text-3xl font-semibold sm:text-4xl">{phase.title}</h1>
         <p className="mt-2 text-muted-foreground">{phase.summary}</p>
       </div>
 
@@ -234,7 +234,7 @@ export function FamilyPhasePage() {
 
       {stories.length > 0 && (
         <section aria-labelledby="phase-stories" className="flex flex-col gap-4">
-          <h2 id="phase-stories" className="text-xl font-extrabold">
+          <h2 id="phase-stories" className="text-xl font-semibold">
             {F.stories}
           </h2>
           {stories.map((s) => (

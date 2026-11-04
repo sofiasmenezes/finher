@@ -20,7 +20,7 @@ function AuthLayout({ title, subtitle, children }: { title: string; subtitle: st
         />
         <Logo className="relative" />
         <div className="relative">
-          <p className="font-display text-4xl font-extrabold leading-tight">{t.landing.hero.title}</p>
+          <p className="font-display text-4xl font-semibold leading-tight">{t.landing.hero.title}</p>
           <p className="mt-4 max-w-md text-navy-foreground/75">{t.brand.tagline}</p>
         </div>
         <p className="relative flex items-center gap-2 text-sm text-navy-foreground/75">
@@ -34,7 +34,7 @@ function AuthLayout({ title, subtitle, children }: { title: string; subtitle: st
         </div>
         <main id="main" className="flex flex-1 items-start justify-center px-4 pb-24 pt-6 sm:items-center sm:px-6">
           <div className="w-full max-w-md">
-            <h1 className="text-3xl font-extrabold sm:text-4xl">{title}</h1>
+            <h1 className="text-3xl font-semibold sm:text-4xl">{title}</h1>
             <p className="mt-2 text-muted-foreground">{subtitle}</p>
             <div className="mt-8">{children}</div>
           </div>
@@ -135,7 +135,7 @@ export function SignupPage() {
               {formError}
             </p>
           )}
-          <Button type="submit" variant="cta" size="lg" disabled={busy}>
+          <Button type="submit" size="lg" disabled={busy}>
             {busy && <Loader2 className="animate-spin" aria-hidden="true" />}
             {t.auth.submitSignup}
           </Button>

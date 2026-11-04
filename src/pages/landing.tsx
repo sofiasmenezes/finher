@@ -1,46 +1,50 @@
+import { Fragment } from "react";
 import { Link } from "react-router-dom";
-import {
-  ArrowRight,
-  BadgeCheck,
-  BookOpen,
-  Compass,
-  EyeOff,
-  Flag,
-  HeartHandshake,
-  Lock,
-  MapPin,
-  Quote,
-  Route,
-  ShieldCheck,
-  Users,
-  UsersRound,
-  Wallet,
-  type LucideIcon,
-} from "lucide-react";
+import { ArrowRight, BadgeCheck, EyeOff, Lock, ShieldCheck, Wallet, type LucideIcon } from "lucide-react";
 import { Logo } from "@/components/layout/logo";
 import { SiteHeader } from "@/components/layout/site-header";
 import { Button } from "@/components/ui/button";
 import { fmt, useT } from "@/i18n";
+import { cn } from "@/lib/utils";
 
-const PILLAR_ICONS: Record<string, LucideIcon> = {
-  learn: BookOpen,
-  challenges: Flag,
-  family: HeartHandshake,
-  stories: Quote,
-};
-const EDGE_ICONS: Record<string, LucideIcon> = {
-  navigator: Route,
-  family: HeartHandshake,
-  stories: Quote,
-  community: UsersRound,
-};
 const SAFETY_ICONS: LucideIcon[] = [Wallet, Lock, EyeOff, ShieldCheck];
 
-function Eyebrow({ children, onDark }: { children: React.ReactNode; onDark?: boolean }) {
+const two = (n: number) => String(n).padStart(2, "0");
+
+function Eyebrow({ children, onDark, n }: { children: React.ReactNode; onDark?: boolean; n?: number }) {
   return (
-    <p className={onDark ? "text-sm font-semibold uppercase tracking-wider text-cta" : "text-sm font-semibold uppercase tracking-wider text-primary"}>
+    <p className={cn("label-mono", onDark ? "text-cta" : "text-primary")}>
+      {n !== undefined && <>Nº {two(n)} — </>}
       {children}
     </p>
+  );
+}
+
+/** "First sentence. Second sentence." → the second one gets the highlighter. */
+function HeroTitle({ text }: { text: string }) {
+  const cut = text.indexOf(". ");
+  if (cut < 0) return <>{text}</>;
+  return (
+    <>
+      {text.slice(0, cut + 1)} <span className="highlight italic">{text.slice(cut + 2)}</span>
+    </>
+  );
+}
+
+/** Running strip of what's inside, like a market ticker. */
+function Ticker() {
+  const items = useT().landing.ticker;
+  return (
+    <div className="overflow-hidden bg-navy text-navy-foreground" aria-hidden="true">
+      <div className="mx-auto flex max-w-7xl items-center gap-5 whitespace-nowrap px-4 py-2.5 sm:px-6">
+        {items.map((item, i) => (
+          <Fragment key={item}>
+            {i > 0 && <span className="text-cta">✦</span>}
+            <span className="label-mono">{item}</span>
+          </Fragment>
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -49,43 +53,39 @@ function PathPreview() {
   const t = useT();
   const P = t.landing.preview;
   return (
-    <div className="rounded-2xl border bg-card p-5 shadow-xl shadow-navy/5 sm:p-6">
-      <div className="flex items-center justify-between gap-3">
-        <p className="font-display text-base font-bold">{P.title}</p>
-        <span className="rounded-full border px-2.5 py-0.5 text-xs font-semibold text-muted-foreground">{P.sample}</span>
-      </div>
-
-      <dl className="mt-4 grid gap-3 sm:grid-cols-2">
-        <div className="rounded-xl bg-muted p-3">
-          <dt className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-            <MapPin className="size-3.5" aria-hidden="true" /> {P.stageLabel}
-          </dt>
-          <dd className="mt-1 text-sm font-semibold">{P.stageValue}</dd>
+    <div className="relative">
+      <div aria-hidden="true" className="absolute -right-3 -top-3 hidden size-full rounded-2xl bg-cta sm:block" />
+      <div className="relative rounded-2xl border border-foreground bg-card p-5 sm:p-7">
+        <div className="flex items-baseline justify-between gap-3">
+          <p className="font-display text-2xl font-semibold">{P.title}</p>
+          <span className="label-mono text-primary">{P.sample}</span>
         </div>
-        <div className="rounded-xl bg-muted p-3">
-          <dt className="text-xs font-medium text-muted-foreground">{P.areasLabel}</dt>
-          <dd className="mt-1 text-sm font-semibold">{P.areasValue}</dd>
-        </div>
-      </dl>
 
-      <p className="mt-5 text-xs font-semibold uppercase tracking-wide text-primary">{P.nextLabel}</p>
-      <ol className="mt-2 flex flex-col gap-2">
-        {P.steps.map((s, i) => (
-          <li key={s} className="flex items-center gap-3 rounded-xl border p-3 text-sm">
-            <span className="grid size-7 shrink-0 place-items-center rounded-full bg-cta font-display text-xs font-extrabold text-cta-foreground">
-              {i + 1}
-            </span>
-            {s}
-          </li>
-        ))}
-      </ol>
+        <dl className="mt-4 grid grid-cols-2 border-y border-foreground py-3">
+          <div>
+            <dt className="label-mono text-muted-foreground">{P.stageLabel}</dt>
+            <dd className="mt-1 text-sm font-semibold">{P.stageValue}</dd>
+          </div>
+          <div>
+            <dt className="label-mono text-muted-foreground">{P.areasLabel}</dt>
+            <dd className="mt-1 text-sm font-semibold">{P.areasValue}</dd>
+          </div>
+        </dl>
 
-      <div className="mt-4 flex items-center gap-3 rounded-xl border border-dashed p-3 text-sm">
-        <Users className="size-4 shrink-0 text-primary" aria-hidden="true" />
-        <span>
+        <p className="label-mono mt-5 text-primary">{P.nextLabel}</p>
+        <ol className="mt-1">
+          {P.steps.map((s, i) => (
+            <li key={s} className="flex items-center gap-4 border-b py-3.5 text-[0.95rem] font-medium last:border-b-0">
+              <span className="font-display text-2xl italic text-primary">{two(i + 1)}</span>
+              {s}
+            </li>
+          ))}
+        </ol>
+
+        <p className="mt-3 rounded-xl bg-muted px-3 py-2.5 text-sm">
           <span className="text-muted-foreground">{P.communityLabel}: </span>
           <span className="font-semibold">{P.communityValue}</span>
-        </span>
+        </p>
       </div>
     </div>
   );
@@ -98,23 +98,19 @@ export default function Landing() {
   return (
     <>
       <SiteHeader />
+      <Ticker />
       <main id="main">
         {/* Hero */}
         <section className="relative overflow-hidden">
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 opacity-60 [background-image:linear-gradient(var(--border)_1px,transparent_1px),linear-gradient(90deg,var(--border)_1px,transparent_1px)] [background-size:48px_48px] [mask-image:radial-gradient(ellipse_at_top_right,black,transparent_70%)]"
-          />
-          <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-4 pb-16 pt-10 sm:px-6 sm:pt-16 lg:grid-cols-[1.1fr_1fr] lg:gap-16 lg:pb-24 lg:pt-20">
+          <div className="relative mx-auto grid max-w-7xl items-center gap-14 px-4 pb-16 pt-12 sm:px-6 sm:pt-16 lg:grid-cols-[1.15fr_1fr] lg:gap-20 lg:pb-24 lg:pt-20">
             <div>
-              <p className="inline-flex items-center gap-2 rounded-full border bg-card px-3 py-1 text-xs font-semibold text-muted-foreground">
-                <span className="size-1.5 shrink-0 rounded-full bg-cta" aria-hidden="true" />
-                {L.hero.eyebrow}
-              </p>
-              <h1 className="mt-5 text-[2.5rem] font-extrabold leading-[1.02] sm:text-6xl lg:text-[4.25rem]">{L.hero.title}</h1>
-              <p className="mt-6 max-w-xl text-lg text-muted-foreground">{L.hero.subtitle}</p>
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <Button asChild variant="cta" size="lg">
+              <Eyebrow n={1}>{L.hero.eyebrow}</Eyebrow>
+              <h1 className="mt-6 text-[2.75rem] font-normal leading-[1.02] tracking-[-0.03em] sm:text-6xl lg:text-[5.25rem]">
+                <HeroTitle text={L.hero.title} />
+              </h1>
+              <p className="mt-7 max-w-xl text-lg leading-relaxed text-muted-foreground">{L.hero.subtitle}</p>
+              <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+                <Button asChild size="lg">
                   <Link to="/signup">
                     {L.hero.ctaPrimary} <ArrowRight />
                   </Link>
@@ -123,7 +119,7 @@ export default function Landing() {
                   <a href="#how">{L.hero.ctaSecondary}</a>
                 </Button>
               </div>
-              <p className="mt-4 text-sm text-muted-foreground">{L.hero.note}</p>
+              <p className="label-mono mt-5 text-muted-foreground">{L.hero.note}</p>
             </div>
             <div className="lg:pl-4">
               <PathPreview />
@@ -131,81 +127,59 @@ export default function Landing() {
           </div>
         </section>
 
+        {/* Four doors */}
+        <section id="pillars" className="scroll-mt-20 border-y border-foreground" aria-labelledby="pillars-title">
+          <div className="mx-auto max-w-7xl px-4 pt-16 sm:px-6 lg:pt-20">
+            <div className="grid gap-6 lg:grid-cols-[1fr_1fr] lg:items-end">
+              <div>
+                <Eyebrow n={2}>{L.pillars.eyebrow}</Eyebrow>
+                <h2 id="pillars-title" className="mt-4 text-4xl font-normal sm:text-6xl">
+                  {L.pillars.title}
+                </h2>
+              </div>
+              <p className="max-w-xl text-lg text-muted-foreground lg:justify-self-end">{L.pillars.body}</p>
+            </div>
+          </div>
+          <ul className="mx-auto mt-12 grid max-w-7xl sm:grid-cols-2 lg:grid-cols-4">
+            {L.pillars.items.map((p, i) => (
+              <li
+                key={p.id}
+                className={cn(
+                  "flex flex-col gap-3 border-t px-4 py-8 sm:px-6 lg:py-10",
+                  i % 2 === 1 && "sm:border-l",
+                  i > 0 && "lg:border-l",
+                )}
+              >
+                <p className="label-mono text-primary">
+                  {L.door} {two(i + 1)}
+                </p>
+                <h3 className="text-3xl font-medium">{p.title}</h3>
+                <p className="text-muted-foreground">{p.body}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+
         {/* The gap */}
         <section className="bg-navy text-navy-foreground" aria-labelledby="gap-title">
           <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:py-24">
-            <div className="max-w-3xl">
-              <Eyebrow onDark>{L.gap.eyebrow}</Eyebrow>
-              <h2 id="gap-title" className="mt-3 text-3xl font-extrabold sm:text-5xl">
+            <div className="max-w-4xl">
+              <Eyebrow onDark n={3}>
+                {L.gap.eyebrow}
+              </Eyebrow>
+              <h2 id="gap-title" className="mt-4 text-4xl font-normal italic leading-[1.05] sm:text-6xl lg:text-7xl">
                 {L.gap.title}
               </h2>
-              <p className="mt-5 text-lg text-navy-foreground/80">{L.gap.intro}</p>
+              <p className="mt-6 max-w-2xl text-lg text-navy-foreground/80">{L.gap.intro}</p>
             </div>
-            <ul className="mt-12 grid gap-4 md:grid-cols-3">
-              {L.gap.items.map((item) => (
-                <li key={item.title} className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
-                  <h3 className="text-xl font-bold">{item.title}</h3>
+            <ul className="mt-14 grid gap-px overflow-hidden rounded-2xl bg-white/15 md:grid-cols-3">
+              {L.gap.items.map((item, i) => (
+                <li key={item.title} className="bg-navy p-6 sm:p-8">
+                  <span className="font-display text-3xl italic text-cta">{two(i + 1)}</span>
+                  <h3 className="mt-4 text-2xl font-medium">{item.title}</h3>
                   <p className="mt-2 text-navy-foreground/80">{item.body}</p>
                 </li>
               ))}
-            </ul>
-          </div>
-        </section>
-
-        {/* Four sections */}
-        <section id="pillars" className="scroll-mt-20" aria-labelledby="pillars-title">
-          <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:py-24">
-            <div className="max-w-2xl">
-              <Eyebrow>{L.pillars.eyebrow}</Eyebrow>
-              <h2 id="pillars-title" className="mt-3 text-3xl font-extrabold sm:text-5xl">
-                {L.pillars.title}
-              </h2>
-            </div>
-            <ul className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {L.pillars.items.map((p) => {
-                const Icon = PILLAR_ICONS[p.id] ?? Compass;
-                return (
-                  <li key={p.id} className="rounded-2xl border bg-card p-6">
-                    <span className="grid size-11 place-items-center rounded-xl bg-primary/10 text-primary">
-                      <Icon className="size-5" aria-hidden="true" />
-                    </span>
-                    <h3 className="mt-5 text-lg font-bold">{p.title}</h3>
-                    <p className="mt-2 text-muted-foreground">{p.body}</p>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        </section>
-
-        {/* Why FinHer */}
-        <section id="different" className="scroll-mt-20 bg-navy text-navy-foreground" aria-labelledby="edge-title">
-          <div className="mx-auto grid max-w-7xl gap-12 px-4 py-16 sm:px-6 lg:grid-cols-[1fr_1.4fr] lg:py-24">
-            <div>
-              <Eyebrow onDark>{L.edge.eyebrow}</Eyebrow>
-              <h2 id="edge-title" className="mt-3 text-3xl font-extrabold sm:text-5xl">
-                {L.edge.title}
-              </h2>
-              <p className="mt-5 text-lg text-navy-foreground/80">{L.edge.body}</p>
-            </div>
-            <ul className="grid gap-4 sm:grid-cols-2">
-              {L.edge.items.map((item) => {
-                const Icon = EDGE_ICONS[item.id] ?? Route;
-                return (
-                  <li key={item.id} className="flex flex-col rounded-2xl border border-white/10 bg-white/[0.04] p-6">
-                    <div className="flex items-center justify-between gap-3">
-                      <Icon className="size-6 text-cta" aria-hidden="true" />
-                      {item.soon && (
-                        <span className="rounded-full border border-white/20 px-2.5 py-0.5 text-xs font-semibold text-navy-foreground/80">
-                          {L.edge.soon}
-                        </span>
-                      )}
-                    </div>
-                    <h3 className="mt-4 text-lg font-bold">{item.title}</h3>
-                    <p className="mt-2 text-navy-foreground/80">{item.body}</p>
-                  </li>
-                );
-              })}
             </ul>
           </div>
         </section>
@@ -214,18 +188,16 @@ export default function Landing() {
         <section id="how" className="scroll-mt-20" aria-labelledby="how-title">
           <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:py-24">
             <div className="max-w-2xl">
-              <Eyebrow>{L.how.eyebrow}</Eyebrow>
-              <h2 id="how-title" className="mt-3 text-3xl font-extrabold sm:text-5xl">
+              <Eyebrow n={4}>{L.how.eyebrow}</Eyebrow>
+              <h2 id="how-title" className="mt-4 text-4xl font-normal sm:text-6xl">
                 {L.how.title}
               </h2>
             </div>
-            <ol className="mt-12 grid gap-8 md:grid-cols-3 md:gap-6">
+            <ol className="mt-14 grid gap-10 md:grid-cols-3 md:gap-8">
               {L.how.steps.map((s, i) => (
-                <li key={s.title}>
-                  <span className="grid size-12 place-items-center rounded-full bg-cta font-display text-lg font-extrabold text-cta-foreground">
-                    {i + 1}
-                  </span>
-                  <h3 className="mt-5 text-xl font-bold">{s.title}</h3>
+                <li key={s.title} className="border-t border-foreground pt-6">
+                  <span className="font-display text-6xl italic leading-none text-primary">{two(i + 1)}</span>
+                  <h3 className="mt-5 text-2xl font-medium">{s.title}</h3>
                   <p className="mt-2 text-muted-foreground">{s.body}</p>
                 </li>
               ))}
@@ -237,8 +209,8 @@ export default function Landing() {
         <section id="universities" className="scroll-mt-20 border-y bg-card" aria-labelledby="uni-title">
           <div className="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:gap-16 lg:py-24">
             <div>
-              <Eyebrow>{L.universities.eyebrow}</Eyebrow>
-              <h2 id="uni-title" className="mt-3 text-3xl font-extrabold sm:text-5xl">
+              <Eyebrow n={5}>{L.universities.eyebrow}</Eyebrow>
+              <h2 id="uni-title" className="mt-4 text-4xl font-normal sm:text-5xl">
                 {L.universities.title}
               </h2>
               <p className="mt-5 text-lg text-muted-foreground">{L.universities.body}</p>
@@ -251,11 +223,11 @@ export default function Landing() {
                 <p className="mt-3 text-sm text-muted-foreground">{L.universities.ctaNote}</p>
               </div>
             </div>
-            <ul className="grid gap-3 self-center">
+            <ul className="self-center">
               {L.universities.items.map((item) => (
-                <li key={item} className="flex items-start gap-3 rounded-2xl border bg-background p-5">
+                <li key={item} className="flex items-start gap-3 border-b py-4 first:border-t">
                   <BadgeCheck className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden="true" />
-                  <span className="font-medium">{item}</span>
+                  <span className="text-lg font-medium">{item}</span>
                 </li>
               ))}
             </ul>
@@ -266,18 +238,20 @@ export default function Landing() {
         <section id="safety" className="scroll-mt-20" aria-labelledby="safety-title">
           <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:py-24">
             <div className="max-w-2xl">
-              <Eyebrow>{L.safety.eyebrow}</Eyebrow>
-              <h2 id="safety-title" className="mt-3 text-3xl font-extrabold sm:text-5xl">
+              <Eyebrow n={6}>{L.safety.eyebrow}</Eyebrow>
+              <h2 id="safety-title" className="mt-4 text-4xl font-normal sm:text-5xl">
                 {L.safety.title}
               </h2>
             </div>
-            <ul className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <ul className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
               {L.safety.items.map((s, i) => {
                 const Icon = SAFETY_ICONS[i];
                 return (
                   <li key={s.title}>
-                    <Icon className="size-6 text-primary" aria-hidden="true" />
-                    <h3 className="mt-4 text-lg font-bold">{s.title}</h3>
+                    <span className="grid size-11 place-items-center rounded-full bg-cta text-cta-foreground">
+                      <Icon className="size-5" aria-hidden="true" />
+                    </span>
+                    <h3 className="mt-4 text-xl font-medium">{s.title}</h3>
                     <p className="mt-2 text-muted-foreground">{s.body}</p>
                   </li>
                 );
@@ -289,15 +263,15 @@ export default function Landing() {
         {/* FAQ */}
         <section id="faq" className="scroll-mt-20 border-t bg-card" aria-labelledby="faq-title">
           <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:py-24">
-            <h2 id="faq-title" className="text-3xl font-extrabold sm:text-4xl">
+            <h2 id="faq-title" className="text-4xl font-normal sm:text-5xl">
               {L.faq.title}
             </h2>
-            <div className="mt-8 divide-y rounded-2xl border bg-background">
+            <div className="mt-8 border-t border-foreground">
               {L.faq.items.map((f) => (
-                <details key={f.q} className="group px-5 py-4 [&_summary::-webkit-details-marker]:hidden">
-                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4 rounded-lg font-semibold">
+                <details key={f.q} className="group border-b py-5 [&_summary::-webkit-details-marker]:hidden">
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4 rounded-lg text-lg font-medium">
                     {f.q}
-                    <span className="text-xl text-muted-foreground transition-transform group-open:rotate-45" aria-hidden="true">
+                    <span className="font-display text-2xl text-primary transition-transform group-open:rotate-45" aria-hidden="true">
                       +
                     </span>
                   </summary>
@@ -310,9 +284,9 @@ export default function Landing() {
 
         {/* Final CTA */}
         <section className="px-4 py-16 sm:px-6 lg:py-24">
-          <div className="mx-auto max-w-7xl rounded-3xl bg-navy px-6 py-14 text-center text-navy-foreground sm:px-12 sm:py-20">
-            <h2 className="mx-auto max-w-3xl text-3xl font-extrabold sm:text-5xl">{L.finalCta.title}</h2>
-            <Button asChild variant="cta" size="lg" className="mt-8">
+          <div className="mx-auto max-w-7xl rounded-3xl bg-navy px-6 py-16 text-center text-navy-foreground sm:px-12 sm:py-24">
+            <h2 className="mx-auto max-w-4xl text-4xl font-normal italic sm:text-6xl">{L.finalCta.title}</h2>
+            <Button asChild variant="cta" size="lg" className="mt-10">
               <Link to="/signup">
                 {L.finalCta.cta} <ArrowRight />
               </Link>
@@ -321,7 +295,7 @@ export default function Landing() {
         </section>
       </main>
 
-      <footer className="border-t pb-20">
+      <footer className="border-t border-foreground pb-20">
         <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-10 sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <div>
             <Logo />

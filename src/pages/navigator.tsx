@@ -77,14 +77,14 @@ export function NavigatorPage() {
   return (
     <div className="mx-auto flex max-w-5xl flex-col gap-10">
       <header>
-        <p className="text-sm font-semibold uppercase tracking-wider text-primary">{N.eyebrow}</p>
-        <h1 className="mt-2 text-3xl font-extrabold sm:text-4xl">{N.title}</h1>
+        <p className="label-mono text-primary">{N.eyebrow}</p>
+        <h1 className="mt-2 text-3xl font-semibold sm:text-4xl">{N.title}</h1>
         <p className="mt-3 max-w-2xl text-muted-foreground">{N.subtitle}</p>
         <SensitiveNote className="mt-6 max-w-2xl" />
       </header>
 
       <section aria-labelledby="choose-title">
-        <h2 id="choose-title" className="text-xl font-extrabold">
+        <h2 id="choose-title" className="text-xl font-semibold">
           {N.choose}
         </h2>
         <ul className="mt-4 grid gap-4 sm:grid-cols-2">
@@ -114,7 +114,7 @@ export function NavigatorPage() {
       </section>
 
       <section aria-labelledby="saved-title">
-        <h2 id="saved-title" className="text-xl font-extrabold">
+        <h2 id="saved-title" className="text-xl font-semibold">
           {N.saved}
         </h2>
         {error ? (
@@ -150,7 +150,7 @@ export function NavigatorPage() {
       </section>
 
       <section aria-labelledby="coming-guides">
-        <h2 id="coming-guides" className="text-xl font-extrabold">
+        <h2 id="coming-guides" className="text-xl font-semibold">
           {t.journeys.comingTitle}
         </h2>
         <ul className="mt-4 grid gap-3 md:grid-cols-3">
@@ -197,7 +197,7 @@ function Questions({
   return (
     <form onSubmit={submit} noValidate className="flex flex-col gap-6">
       <div>
-        <h2 className="text-xl font-extrabold">{N.questionsTitle}</h2>
+        <h2 className="text-xl font-semibold">{N.questionsTitle}</h2>
         <p className="mt-1 text-sm text-muted-foreground">{N.questionsHint}</p>
       </div>
       {playbook.questions.map((q, qi) => (
@@ -240,7 +240,7 @@ function Questions({
           {N.answerAll}
         </p>
       )}
-      <Button type="submit" variant="cta" size="lg" className="self-start">
+      <Button type="submit" size="lg" className="self-start">
         {N.seePlan} <ArrowRight />
       </Button>
     </form>
@@ -267,7 +267,7 @@ function Plan({ playbook, answers }: { playbook: Playbook; answers: Record<strin
       </Card>
 
       <section aria-labelledby="options-title">
-        <h2 id="options-title" className="text-xl font-extrabold">
+        <h2 id="options-title" className="text-xl font-semibold">
           {N.options}
         </h2>
         <ol className="mt-4 grid gap-4 lg:grid-cols-3">
@@ -504,10 +504,10 @@ export function PlaybookPage() {
           <ArrowLeft className="size-4" aria-hidden="true" /> {N.back}
         </Link>
         <div className="mt-4 flex flex-wrap items-center gap-3">
-          <p className="text-sm font-semibold uppercase tracking-wider text-primary">{N.eyebrow}</p>
+          <p className="label-mono text-primary">{N.eyebrow}</p>
           {existing && <StatusPill status={existing.status} />}
         </div>
-        <h1 ref={headingRef} tabIndex={-1} className="mt-2 text-3xl font-extrabold outline-none sm:text-4xl">
+        <h1 ref={headingRef} tabIndex={-1} className="mt-2 text-3xl font-semibold outline-none sm:text-4xl">
           {playbook.title}
         </h1>
         <p className="mt-2 text-muted-foreground">{playbook.summary}</p>

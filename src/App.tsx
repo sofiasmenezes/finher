@@ -72,7 +72,7 @@ function NotFound() {
     <main id="main" className="grid min-h-dvh place-items-center px-4 text-center">
       <div>
         <p className="font-mono text-sm text-primary">404</p>
-        <h1 className="mt-2 text-3xl font-extrabold">{t.notFound.title}</h1>
+        <h1 className="mt-2 text-3xl font-semibold">{t.notFound.title}</h1>
         <p className="mt-2 text-muted-foreground">{t.notFound.body}</p>
         <Button asChild className="mt-6">
           <Link to="/">{t.notFound.home}</Link>

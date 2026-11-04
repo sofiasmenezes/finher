@@ -25,14 +25,14 @@ export function StoriesPage() {
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-10">
       <header>
-        <p className="text-sm font-semibold uppercase tracking-wider text-primary">{J.eyebrow}</p>
-        <h1 className="mt-2 text-3xl font-extrabold sm:text-4xl">{J.title}</h1>
+        <p className="label-mono text-primary">{J.eyebrow}</p>
+        <h1 className="mt-2 text-3xl font-semibold sm:text-4xl">{J.title}</h1>
         <p className="mt-3 max-w-2xl text-muted-foreground">{J.subtitle}</p>
       </header>
 
       {/* Real stories */}
       <section aria-labelledby="stories-title">
-        <h2 id="stories-title" className="text-2xl font-extrabold">
+        <h2 id="stories-title" className="text-2xl font-semibold">
           {J.storiesTitle}
         </h2>
         {INTERVIEWS.length === 0 ? (
@@ -117,7 +117,7 @@ export function StoryPage() {
           <ArrowLeft className="size-4" aria-hidden="true" /> {J.storyBack}
         </Link>
         <Badge className="mt-4">{J.interview}</Badge>
-        <h1 className="mt-2 text-3xl font-extrabold sm:text-4xl">{story.title}</h1>
+        <h1 className="mt-2 text-3xl font-semibold sm:text-4xl">{story.title}</h1>
         <p className="mt-2 font-medium">
           {story.displayName}
           {story.role ? ` · ${story.role}` : ""}

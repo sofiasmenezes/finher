@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..700&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
     <title>FinHer</title>
@@ -16,7 +16,7 @@
       // Apply the saved theme before first paint to avoid a flash.
       (function () {
         try {
-          var t = localStorage.getItem("elevar-theme") || "system";
+          var t = localStorage.getItem("elevar-theme") || "light";
           var host = document.documentElement.getAttribute("data-theme");
           var sys = host === "dark" || host === "light" ? host === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
           var dark = t === "dark" || (t === "system" && sys);

@@ -178,6 +178,12 @@ body {
   p {
     text-wrap: pretty;
   }
+  /* The brand uses no italics: emphasis is carried by weight. */
+  em,
+  i {
+    font-style: normal;
+    font-weight: 600;
+  }
   :focus-visible {
     outline: 3px solid var(--ring);
     outline-offset: 2px;
@@ -192,24 +198,12 @@ body {
   }
 }
 
-/* Signature: a lime highlighter stroke behind a key phrase. */
-.highlight {
-  background-image: linear-gradient(transparent 58%, var(--cta) 58%, var(--cta) 92%, transparent 92%);
-  padding-inline: 0.06em;
-  box-decoration-break: clone;
-  -webkit-box-decoration-break: clone;
-}
-.dark .highlight {
-  background-image: none;
-  color: var(--cta);
-}
-
-/* Small mono label used for section numbers and eyebrows ("Nº 01 — …"). */
+/* Small letter-spaced label for eyebrows and metadata. */
 .label-mono {
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: 0.72rem;
-  font-weight: 500;
-  letter-spacing: 0.14em;
+  font-weight: 600;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
 }
 

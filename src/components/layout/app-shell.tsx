@@ -68,7 +68,7 @@ function SideNav({ onNavigate }: { onNavigate?: () => void }) {
     <div className="flex flex-col gap-5">
       {groups.map((g, gi) => (
         <div key={gi}>
-          {g.label && <p className="px-3 pb-2 font-mono text-[0.68rem] uppercase tracking-[0.18em] text-muted-foreground">{g.label}</p>}
+          {g.label && <p className="label-mono px-3 pb-2 text-muted-foreground">{g.label}</p>}
           <ul className="flex flex-col gap-0.5">
             {g.items.map(({ to, label, icon: Icon, soon }) => (
               <li key={to}>
@@ -78,14 +78,14 @@ function SideNav({ onNavigate }: { onNavigate?: () => void }) {
                   onClick={onNavigate}
                   className={({ isActive }) =>
                     cn(
-                      "flex items-center gap-3 px-3 py-2.5 text-[0.95rem] font-medium transition-colors",
-                      isActive ? "bg-foreground text-background" : "text-foreground hover:bg-accent",
+                      "flex items-center gap-3 rounded-full px-3 py-2.5 text-[0.95rem] font-medium transition-colors",
+                      isActive ? "bg-primary/8 font-semibold text-primary" : "text-foreground hover:bg-accent",
                     )
                   }
                 >
                   <Icon className="size-4.5 shrink-0" aria-hidden="true" />
                   <span className="flex-1">{label}</span>
-                  {soon && <span className="font-mono text-[0.62rem] uppercase tracking-widest text-primary">{t.app.nav.soon}</span>}
+                  {soon && <span className="label-mono text-[0.62rem] text-primary">{t.app.nav.soon}</span>}
                 </NavLink>
               </li>
             ))}
@@ -156,7 +156,7 @@ function TabBar({ moreOpen, onMore }: { moreOpen: boolean; onMore: () => void })
   return (
     <nav
       aria-label={N.tabsLabel}
-      className="fixed inset-x-0 bottom-0 z-40 border-t border-foreground/80 bg-card pb-[env(safe-area-inset-bottom,0px)] lg:hidden"
+      className="fixed inset-x-0 bottom-0 z-40 border-t bg-card pb-[env(safe-area-inset-bottom,0px)] lg:hidden"
     >
       <ul className="flex">
         {tabs.map(({ to, label, icon: Icon }) => (
@@ -205,7 +205,7 @@ export function AppShell() {
 
   return (
     <div className="min-h-dvh lg:grid lg:grid-cols-[272px_1fr]">
-      <aside className="sticky top-[env(safe-area-inset-top,0px)] hidden h-dvh flex-col border-r border-foreground/80 px-4 pb-20 pt-6 lg:flex">
+      <aside className="sticky top-[env(safe-area-inset-top,0px)] hidden h-dvh flex-col border-r px-4 pb-20 pt-6 lg:flex">
         <Logo to={paths.home} className="px-3" />
         <nav aria-label={t.nav.mainLabel} className="mt-8 flex-1 overflow-y-auto">
           <SideNav />
@@ -221,7 +221,7 @@ export function AppShell() {
       </aside>
 
       <div className="flex min-w-0 flex-col">
-        <header className="sticky top-[env(safe-area-inset-top,0px)] z-30 flex h-16 items-center gap-3 border-b border-foreground/80 bg-background/90 px-4 backdrop-blur sm:px-6 lg:border-b-0 lg:px-10">
+        <header className="sticky top-[env(safe-area-inset-top,0px)] z-30 flex h-16 items-center gap-3 border-b bg-background/90 px-4 backdrop-blur sm:px-6 lg:border-b-0 lg:px-10">
           <Logo to={paths.home} className="lg:hidden" />
           <QuickSearch className="ml-auto lg:ml-0 lg:w-full lg:max-w-md" />
           <div className="flex items-center gap-1 lg:ml-auto">
@@ -233,7 +233,7 @@ export function AppShell() {
           <nav
             id="app-more-nav"
             aria-label={t.nav.mainLabel}
-            className="fixed inset-x-0 bottom-[calc(4rem+env(safe-area-inset-bottom,0px))] z-50 max-h-[70dvh] overflow-y-auto border-t border-foreground/80 bg-card p-4 shadow-2xl lg:hidden"
+            className="fixed inset-x-0 bottom-[calc(4rem+env(safe-area-inset-bottom,0px))] z-50 max-h-[70dvh] overflow-y-auto border-t bg-card p-4 shadow-2xl lg:hidden"
           >
             <SideNav onNavigate={() => setMoreOpen(false)} />
           </nav>

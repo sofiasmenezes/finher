@@ -57,7 +57,6 @@ export const ptBR = {
   },
 
   landing: {
-    ticker: ["Aprender", "Desafios do trabalho", "Carreira e família", "Histórias reais", "Comunidade em breve", "Conteúdo educativo, sem recomendação de investimento"],
     door: "Porta",
     hero: {
       eyebrow: "Para mulheres que querem entrar, permanecer e crescer no mercado financeiro",

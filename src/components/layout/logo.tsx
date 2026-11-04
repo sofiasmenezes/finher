@@ -23,10 +23,10 @@ export function Logo({ to = "/", className }: { to?: string; className?: string 
   return (
     <Link to={to} className={cn("inline-flex items-center gap-2.5 rounded-lg", className)}>
       <LogoMark />
-      {/* Wordmark: "Fin" upright, "Her" in italic plum, set in the display serif. */}
+      {/* Wordmark: "Fin" in ink, "Her" in plum, set in the display serif. */}
       <span className="font-display text-[1.45rem] font-semibold leading-none tracking-tight">
         {t.brand.name.slice(0, 3)}
-        <em className="font-medium text-primary">{t.brand.name.slice(3)}</em>
+        <span className="text-primary">{t.brand.name.slice(3)}</span>
       </span>
     </Link>
   );

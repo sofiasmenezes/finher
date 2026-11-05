@@ -44,6 +44,7 @@ export const ptBR = {
 
   nav: {
     mainLabel: "Principal",
+    about: "Quem somos",
     pillars: "O que você encontra",
     different: "Por que FinHer",
     howItWorks: "Como funciona",
@@ -62,7 +63,7 @@ export const ptBR = {
       eyebrow: "Para mulheres que querem entrar, permanecer e crescer no mercado financeiro",
       title: "Descubra onde você está. Encontre seu próximo passo.",
       subtitle:
-        "O FinHer reúne o que você precisa para avançar no mercado financeiro: conteúdo para aprender, histórias reais de mulheres que já trilharam esse caminho e uma comunidade de mulheres com objetivos parecidos com os seus.",
+        "O FinHer reúne o que você precisa para avançar no mercado financeiro: uma trilha de estudos para o seu momento, soft skills, histórias reais de mulheres que já trilharam esse caminho, uma comunidade de mulheres com objetivos parecidos com os seus e uma assistente com IA para tirar dúvidas.",
       ctaPrimary: "Montar meu caminho",
       ctaSecondary: "Ver como funciona",
       note: "Gratuito · Configuração em 2 minutos · Para estudantes e profissionais",
@@ -82,6 +83,30 @@ export const ptBR = {
       ],
       communityLabel: "Comunidade sugerida",
       communityValue: "Grupo de estudos de valuation",
+    },
+    about: {
+      eyebrow: "Quem somos",
+      title: "Uma rede feita por mulheres, para mulheres no mercado financeiro.",
+      body: [
+        "O FinHer é um projeto acadêmico independente. Ele nasceu de uma pergunta simples: por que tantas mulheres talentosas desistem do mercado financeiro, ou nem chegam a tentar?",
+        "A resposta raramente é falta de capacidade. É falta de acesso: a informação certa no momento certo, referências de quem já passou por ali e uma rede que abra portas. O FinHer existe para encurtar esse caminho.",
+      ],
+      values: [
+        {
+          title: "Nossa missão",
+          body: "Apoiar, informar e conectar mulheres que querem entrar, permanecer ou crescer no mercado financeiro.",
+        },
+        {
+          title: "Nossa visão",
+          body: "Um mercado em que nenhuma mulher fique de fora por falta de informação, de referência ou de rede.",
+        },
+        {
+          title: "Como trabalhamos",
+          body: "Conteúdo conferido e com fontes, histórias reais com consentimento, privacidade em primeiro lugar e nenhuma recomendação de investimento.",
+        },
+      ],
+      quote: "Você não precisa descobrir esse caminho sozinha.",
+      quoteBy: "Equipe FinHer",
     },
     gap: {
       eyebrow: "O desafio",
@@ -105,19 +130,24 @@ export const ptBR = {
     },
     pillars: {
       eyebrow: "O que você encontra",
-      title: "Quatro portas, um caminho",
+      title: "Cinco portas, um caminho",
       body:
         "Ser interrompida em reunião, negociar salário, ver seu trabalho creditado a outra pessoa, conciliar carreira e maternidade. Essas situações são reais e têm caminho.",
       items: [
         {
           id: "learn",
-          title: "Aprender",
+          title: "Trilha",
           body: "Trilhas feitas para o seu momento, guias de cada área do mercado e preparação para processos seletivos.",
         },
         {
           id: "challenges",
           title: "Desafios",
-          body: "Interrompida em reunião, preterida, negociando salário? Um plano prático, com frases prontas, para cada situação.",
+          body: "Um plano prático, com frases prontas, para cada situação difícil. E indicações de psicólogas feitas pela comunidade.",
+        },
+        {
+          id: "soft-skills",
+          title: "Soft skills",
+          body: "Oratória, etiqueta corporativa, vestimenta, comunicação escrita e presença: o que ninguém ensina na faculdade.",
         },
         {
           id: "family",
@@ -171,6 +201,10 @@ export const ptBR = {
         { q: "Preciso ser estudante?", a: "Não. O FinHer é para mulheres em qualquer momento: estudantes, recém-formadas, profissionais em transição de carreira, recém-chegadas ao setor e quem já atua e quer crescer." },
         { q: "Preciso já investir ou trabalhar no mercado?", a: "Não. Você precisa de curiosidade. O caminho começa de onde você está." },
         { q: "O FinHer diz em que investir?", a: "Não. Ensinamos a entender o mercado e a construir sua carreira nele. Não recomendamos ativos nem produtos." },
+        {
+          q: "O que a assistente FinHer faz?",
+          a: "É uma assistente com inteligência artificial que tira dúvidas sobre carreira, mercado, estudos, soft skills, maternidade e bem-estar, e indica o conteúdo certo do FinHer. Ela não recomenda investimentos, não substitui psicólogas nem advogadas e só usa os dados do seu perfil se você permitir.",
+        },
       ],
     },
     finalCta: {
@@ -354,13 +388,16 @@ export const ptBR = {
     aboutTitle: "Sobre o FinHer",
     aboutBody:
       "O FinHer é um projeto acadêmico criado para apoiar, informar e conectar mulheres que querem entrar, permanecer ou crescer no mercado financeiro. A ideia não é ser só uma biblioteca de conteúdo: é ajudar cada mulher a enxergar onde está, encontrar o próximo passo e se sentir acompanhada.",
+    assistantTitle: "Ficou com alguma dúvida?",
+    assistantBody: "Carreira, estudos, soft skills, maternidade ou um desafio no trabalho: pergunte à assistente FinHer.",
+    assistantCta: "Perguntar à assistente",
     institutionsTitle: "Iniciativas de quem já está no mercado",
     institutionsSubtitle: "Empresas e programas com iniciativas para mulheres no mercado financeiro. Informações públicas, com fontes.",
     noAffiliation: "O FinHer é um projeto acadêmico independente e não tem vínculo com esta empresa.",
   },
 
   education: {
-    eyebrow: "Aprender",
+    eyebrow: "Trilha",
     title: "Aprenda no seu ritmo",
     subtitle: "Trilhas curtas, guias por área e preparação para processos seletivos, organizados a partir do seu momento.",
     trailsTitle: "Trilhas recomendadas para você",
@@ -392,7 +429,6 @@ export const ptBR = {
     coming: [
       { title: "Biblioteca de indicações", body: "Cursos, certificações, livros, podcasts e newsletters escolhidos e conferidos pela equipe." },
       { title: "Processos seletivos", body: "Como funcionam estágios e programas de trainee, etapas, cases e entrevistas." },
-      { title: "Assistente de estudos com IA", body: "Para explicar conceitos, tirar dúvidas e sugerir trilhas. Vai pedir sua permissão antes de enviar qualquer informação." },
     ],
   },
 
@@ -412,6 +448,12 @@ export const ptBR = {
     ],
     samplesTitle: "Uma prévia",
     samplesNote: "Perfis e grupos abaixo são exemplos, não pessoas ou grupos reais.",
+    therapistsTitle: "Indicações de psicólogas da comunidade",
+    therapistsBody:
+      "Membros da comunidade indicam psicólogas e psicólogos que ajudaram em situações parecidas com as suas: insegurança, burnout, negociação, retorno da licença e outras. As indicações também aparecem em Desafios.",
+    therapistsCount: "Indicações da comunidade: {count}",
+    therapistsOpen: "Ver indicações",
+    therapistsAdd: "Indicar uma profissional",
     safetyTitle: "Como vamos cuidar da comunidade",
     safetyBody: "Código de conduta, denúncia e bloqueio, moderação, mentorias dentro da plataforma e o lembrete de nunca compartilhar dados financeiros sensíveis.",
   },
@@ -448,14 +490,17 @@ export const ptBR = {
     coming: [
       { title: "Entrevistas e processos seletivos", body: "Como se preparar para cada etapa, do currículo ao painel com sócios." },
       { title: "Insegurança, vieses e desconforto", body: "Como reconhecer, lidar e seguir em frente." },
-      { title: "Como se vestir no mercado", body: "Entrevistas, eventos e os diferentes códigos de cada tipo de empresa." },
     ],
   },
 
   app: {
     nav: {
+      home: "Página inicial",
       overview: "Meu caminho",
-      education: "Aprender",
+      assistant: "Assistente FinHer",
+      assistantShort: "Assistente",
+      softSkills: "Soft skills",
+      education: "Trilha",
       challenges: "Desafios",
       family: "Carreira e família",
       stories: "Histórias",
@@ -481,6 +526,7 @@ export const ptBR = {
         playbook: "Desafio",
         phase: "Carreira e família",
         story: "História",
+        softSkill: "Soft skill",
       },
     },
     userMenu: "Menu da conta",
@@ -542,7 +588,10 @@ export const ptBR = {
     confirmDelete: "Sim, apagar",
     notFound: "Não encontramos essa situação. Ela pode ter sido removida.",
     ai: "Adaptar ao meu caso",
-    aiSoon: "Em breve: uma versão opcional adaptada por IA. Ela vai pedir sua permissão toda vez antes de enviar qualquer coisa.",
+    aiBody: "Quer adaptar este plano à sua situação? Leve a pergunta para a assistente FinHer. Nada é enviado sem você confirmar.",
+    aiPrompt: "Estou passando por esta situação: \"{title}\". Pode me ajudar a adaptar o plano ao meu caso? Contexto: ",
+    supportCta: "Quer acompanhamento profissional? Veja psicólogas indicadas por mulheres da comunidade que passaram por algo parecido.",
+    supportLink: "Ver indicações",
   },
 
   family: {
@@ -588,6 +637,142 @@ export const ptBR = {
     deleteConfirmLabel: "Digite EXCLUIR para confirmar",
     deleteWord: "EXCLUIR",
     deleteButton: "Excluir minha conta",
+  },
+
+  softSkills: {
+    eyebrow: "Soft skills",
+    title: "As habilidades que ninguém ensina na faculdade",
+    subtitle:
+      "Oratória, etiqueta corporativa, vestimenta, comunicação escrita e presença. Guias práticos, sem fórmulas prontas, para você se sentir segura em entrevistas, reuniões e eventos.",
+    note: "Não existe um jeito certo de ser mulher no mercado. Os guias mostram os códigos de cada ambiente para você escolher, com consciência, como quer usá-los.",
+    practice: "Pratique",
+    practiceHint: "Marque os exercícios conforme for fazendo. Só você vê.",
+    done: "{done} de {total} feitos",
+    back: "Todas as soft skills",
+    open: "Abrir o guia",
+    askAssistant: "Tirar uma dúvida com a assistente",
+    next: "Próxima: {title}",
+    previous: "Anterior: {title}",
+  },
+
+  support: {
+    eyebrow: "Desafios · Apoio psicológico",
+    cardTitle: "Apoio psicológico",
+    cardBody: "Psicólogas e psicólogos indicados por mulheres da comunidade que passaram por desafios parecidos com os seus.",
+    title: "Você não precisa passar por isso sozinha",
+    subtitle:
+      "Situações difíceis no trabalho pesam. Aqui, mulheres da comunidade FinHer indicam profissionais que as ajudaram, para que você encontre acompanhamento com quem entende desafios parecidos com os seus.",
+    urgentTitle: "Precisa de ajuda agora?",
+    urgentBody:
+      "Se você está em sofrimento intenso ou pensando em se machucar, ligue 188 (CVV, gratuito, 24 horas) ou procure o pronto-socorro mais próximo. Nos Estados Unidos, ligue ou envie mensagem para 988.",
+    freeTitle: "Atendimento gratuito ou a preço social",
+    free: [
+      { title: "CVV · 188", body: "Apoio emocional gratuito, por telefone ou chat, 24 horas por dia." },
+      { title: "SUS: UBS e CAPS", body: "A Unidade Básica de Saúde do seu bairro pode encaminhar para atendimento psicológico. Os CAPS atendem casos mais graves." },
+      { title: "Clínicas-escola", body: "Universidades com curso de Psicologia costumam oferecer atendimento gratuito ou a preço social, com supervisão." },
+    ],
+    checkCrp: "Antes de começar, confira o registro da profissional no Cadastro Nacional do Conselho Federal de Psicologia.",
+    checkCrpLink: "Consultar cadastro do CFP",
+    similarTitle: "Indicadas para situações parecidas com as suas",
+    similarBody: "Com base nos desafios que você salvou e nos seus objetivos. Só você vê esse cruzamento.",
+    similarEmpty: "Salve uma situação em Desafios para ver primeiro as indicações de quem passou por algo parecido.",
+    allTitle: "Todas as indicações da comunidade",
+    filterLabel: "Filtrar por tema",
+    filterAll: "Todos os temas",
+    empty: "Ainda não há indicações para este tema. Que tal ser a primeira?",
+    sample: "Indicação de exemplo",
+    sampleNote: "As indicações marcadas como exemplo são fictícias e servem só para mostrar como a seção funciona.",
+    recommendedBy: "Indicada por {name}",
+    anonymous: "Indicada anonimamente",
+    yours: "Sua indicação",
+    remove: "Remover",
+    removeConfirm: "Remover sua indicação?",
+    helpedWith: "Ajudou com",
+    contact: "Contato",
+    disclaimer:
+      "As indicações são feitas por membros da comunidade e não são verificadas pelo FinHer. Confira o registro da profissional e converse antes de começar. Isto não substitui atendimento de emergência.",
+    form: {
+      title: "Indique uma profissional",
+      body: "Sua indicação aparece para outras mulheres da comunidade, principalmente para quem enfrenta desafios parecidos com os temas que você marcar.",
+      open: "Indicar uma profissional",
+      therapistName: "Nome da psicóloga ou psicólogo",
+      crp: "Registro (CRP)",
+      crpHint: "Opcional, mas ajuda outras mulheres a conferir o cadastro.",
+      modality: "Formato",
+      city: "Cidade",
+      cityHint: "Opcional. Útil para atendimento presencial.",
+      price: "Valor",
+      contact: "Site, perfil profissional ou contato público",
+      contactHint: "Opcional. Só contatos públicos da profissional, nunca o seu.",
+      themes: "Em que essa profissional te ajudou?",
+      themesHint: "Escolha pelo menos um tema. É assim que conectamos sua indicação a quem passa por algo parecido.",
+      comment: "Comentário",
+      commentHint: "Opcional. O que fez diferença no atendimento? Não conte detalhes pessoais nem cite nomes de colegas ou empresas.",
+      anonymous: "Indicar anonimamente (não mostrar meu nome)",
+      submit: "Publicar indicação",
+      cancel: "Cancelar",
+      success: "Obrigada! Sua indicação já aparece para a comunidade.",
+      errors: {
+        name: "Escreva o nome da profissional.",
+        themes: "Escolha pelo menos um tema.",
+      },
+    },
+    themes: {
+      interrupted: "Ser interrompida ou ignorada",
+      "passed-over": "Ser preterida em promoções",
+      "pay-negotiation": "Negociação de salário",
+      credit: "Crédito pelo meu trabalho",
+      networking: "Networking e exposição",
+      anxiety: "Ansiedade e pressão no trabalho",
+      burnout: "Esgotamento (burnout)",
+      impostor: "Insegurança e síndrome da impostora",
+      harassment: "Assédio ou discriminação",
+      family: "Carreira e maternidade",
+      "career-change": "Transição de carreira",
+    },
+    modalities: { online: "Online", inPerson: "Presencial", both: "Online e presencial" },
+    prices: { free: "Gratuito", social: "Preço social", private: "Particular", insurance: "Aceita convênio" },
+  },
+
+  assistant: {
+    eyebrow: "Assistente FinHer",
+    title: "Pergunte o que quiser",
+    subtitle:
+      "Carreira, mercado financeiro, estudos, processos seletivos, soft skills, maternidade, bem-estar. A assistente FinHer responde em português e aponta o conteúdo certo da plataforma.",
+    consentTitle: "Antes de começar",
+    consentItems: [
+      "As respostas são geradas por inteligência artificial e podem conter erros. Confira informações importantes.",
+      "Suas mensagens são enviadas a um provedor de IA para serem respondidas. Não compartilhe dados sensíveis, como documentos, senhas, dados bancários ou nomes de colegas e empresas.",
+      "A assistente não recomenda investimentos e não substitui psicólogas, médicas ou advogadas.",
+      "A conversa fica só nesta tela e some quando você sai da página.",
+    ],
+    consentAccept: "Entendi, começar",
+    useProfile: "Personalizar com meu perfil (momento, áreas e objetivos)",
+    useProfileHint: "Desligado por padrão. Ligado, a assistente recebe só esses três dados, nunca suas anotações ou situações salvas.",
+    placeholder: "Escreva sua dúvida…",
+    send: "Enviar",
+    sending: "Pensando…",
+    newChat: "Nova conversa",
+    you: "Você",
+    bot: "Assistente FinHer",
+    suggestionsTitle: "Sugestões para começar",
+    suggestions: [
+      "Como me preparar para uma entrevista de estágio em asset management?",
+      "Qual a diferença entre research e banco de investimento?",
+      "Como peço aumento sem parecer ingrata?",
+      "Como me vestir para um evento de networking do mercado?",
+      "Estou insegura no meu primeiro emprego. Por onde começo?",
+      "Vale a pena tirar a CPA-20 agora?",
+    ],
+    offlineNote:
+      "A assistente com IA não está disponível agora, então busquei no conteúdo do FinHer o que pode te ajudar:",
+    offlineEmpty:
+      "A assistente com IA não está disponível agora e não encontrei um conteúdo do FinHer sobre isso. Tente com outras palavras ou explore a Trilha, Desafios e Soft skills.",
+    error: "Não consegui responder agora. Tente de novo em instantes.",
+    tooLong: "Sua mensagem passou de {max} caracteres. Tente resumir.",
+    limit: "Esta conversa ficou longa. Comece uma nova para continuar.",
+    disclaimer: "IA pode errar. Educativo, não é recomendação de investimento, aconselhamento jurídico ou atendimento psicológico.",
+    seeAlso: "No FinHer",
   },
 
   notFound: {

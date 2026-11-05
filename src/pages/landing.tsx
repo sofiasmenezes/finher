@@ -100,7 +100,37 @@ export default function Landing() {
           </div>
         </section>
 
-        {/* Four doors */}
+        {/* Who we are */}
+        <section id="about" className="scroll-mt-20 border-t bg-card" aria-labelledby="about-title">
+          <div className="mx-auto grid max-w-7xl gap-12 px-4 py-16 sm:px-6 lg:grid-cols-[1.1fr_1fr] lg:gap-20 lg:py-24">
+            <div>
+              <Eyebrow>{L.about.eyebrow}</Eyebrow>
+              <h2 id="about-title" className="mt-4 text-4xl font-light leading-[1.1] sm:text-5xl">
+                <HeroTitle text={L.about.title} />
+              </h2>
+              {L.about.body.map((p) => (
+                <p key={p} className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">
+                  {p}
+                </p>
+              ))}
+              <figure className="mt-10 max-w-xl border-l-2 border-primary pl-5">
+                <blockquote className="font-display text-2xl font-light">{L.about.quote}</blockquote>
+                <figcaption className="label-mono mt-3 text-muted-foreground">{L.about.quoteBy}</figcaption>
+              </figure>
+            </div>
+            <ol className="self-center">
+              {L.about.values.map((v, i) => (
+                <li key={v.title} className="border-b py-6 first:border-t">
+                  <span className="tabular text-sm font-semibold text-primary">{two(i + 1)}</span>
+                  <h3 className="mt-2 text-2xl font-medium">{v.title}</h3>
+                  <p className="mt-2 text-muted-foreground">{v.body}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+
+        {/* Five doors */}
         <section id="pillars" className="scroll-mt-20 border-y" aria-labelledby="pillars-title">
           <div className="mx-auto max-w-7xl px-4 pt-16 sm:px-6 lg:pt-20">
             <div className="grid gap-6 lg:grid-cols-[1fr_1fr] lg:items-end">
@@ -113,7 +143,7 @@ export default function Landing() {
               <p className="max-w-xl text-lg text-muted-foreground lg:justify-self-end">{L.pillars.body}</p>
             </div>
           </div>
-          <ul className="mx-auto mt-12 grid max-w-7xl sm:grid-cols-2 lg:grid-cols-4">
+          <ul className="mx-auto mt-12 grid max-w-7xl sm:grid-cols-2 lg:grid-cols-5">
             {L.pillars.items.map((p, i) => (
               <li
                 key={p.id}

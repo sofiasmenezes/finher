@@ -13,12 +13,13 @@ Arquivos que começam com `_` são modelos e não aparecem no site.
 
 | Pasta | O que tem |
 |---|---|
-| `areas/` | Guias das áreas do mercado (Visão geral e Educação) |
+| `areas/` | Guias das áreas do mercado (Meu caminho e Trilha) |
 | `institutions/` | Empresas e iniciativas, só com informações públicas e fontes (Visão geral) |
-| `navigator/` | Situações do Navegador de desafios (Trajetórias) |
-| `family/` | Fases do guia Carreira e família (Trajetórias) |
-| `stories/` | Histórias reais de entrevistas e histórias ilustrativas (Trajetórias) |
-| `topics/` | Temas em destaque do pilar Educação, com cursos indicados e fontes (Educação) |
+| `navigator/` | Situações do pilar Desafios |
+| `soft-skills/` | Guias do pilar Soft skills (oratória, etiqueta, vestimenta…) |
+| `family/` | Fases do guia Carreira e família  |
+| `stories/` | Histórias reais de entrevistas e histórias ilustrativas  |
+| `topics/` | Temas em destaque do pilar Trilha, com cursos indicados e fontes (Trilha) |
 | `legal/` | Onde buscar ajuda, um arquivo por país |
 
 ## Regras para todos os arquivos
@@ -79,6 +80,14 @@ Corpo: quaisquer `## Seções`, mais:
 
 - `## Checklist` com linhas `- item`. Mudar o texto de um item zera a marcação dele, então evite mexer.
 - `## País: BR` / `## País: US` com as informações jurídicas e as fontes.
+
+## Soft skill (`soft-skills/*.md`)
+
+Cabeçalho: `id` (nunca mude depois de publicado), `order`, `icon` (um destes: mic, handshake, shirt, mail, sparkles), `title`, `summary`.
+
+Corpo: quaisquer `## Seções`, mais `## Pratique` com linhas `- exercício`. Os exercícios viram um checklist privado. Mudar o texto de um exercício zera a marcação dele.
+
+Para vestimenta e etiqueta, mostre os códigos de cada ambiente sem impor um jeito certo de ser mulher (nada de "mulher precisa usar salto ou maquiagem").
 
 ## Guia de área (`areas/*.md`)
 

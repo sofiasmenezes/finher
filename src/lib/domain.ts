@@ -108,3 +108,55 @@ export function isOnboarded(p: Profile | null): p is Profile & OnboardingAnswers
     !!p.confidence
   );
 }
+
+/* ---------------- Psychologist recommendations (shared with the community) ---------------- */
+
+/**
+ * What a recommendation helped with. Playbook ids from the Challenge Navigator
+ * come first, so a recommendation can be matched to the situations she saved.
+ */
+export const SUPPORT_THEMES = [
+  "interrupted",
+  "passed-over",
+  "pay-negotiation",
+  "credit",
+  "networking",
+  "anxiety",
+  "burnout",
+  "impostor",
+  "harassment",
+  "family",
+  "career-change",
+] as const;
+export type SupportThemeId = (typeof SUPPORT_THEMES)[number];
+
+export const THERAPY_MODALITIES = ["online", "inPerson", "both"] as const;
+export type TherapyModality = (typeof THERAPY_MODALITIES)[number];
+
+export const THERAPY_PRICES = ["free", "social", "private", "insurance"] as const;
+export type TherapyPrice = (typeof THERAPY_PRICES)[number];
+
+/**
+ * A psychologist recommended by a member of the community. Visible to every
+ * signed-in member; only the author can delete it.
+ */
+export interface TherapistRecommendation {
+  id: string;
+  authorId: string;
+  /** First name, or empty when she chose to recommend anonymously. */
+  authorName: string;
+  therapistName: string;
+  /** Professional registration (CRP in Brazil), optional. */
+  crp: string;
+  modality: TherapyModality;
+  city: string;
+  price: TherapyPrice;
+  contact: string;
+  themes: SupportThemeId[];
+  comment: string;
+  createdAt: string;
+  /** Fictional entries used as a preview; always labeled in the UI. */
+  sample?: boolean;
+}
+
+export type TherapistRecommendationInput = Omit<TherapistRecommendation, "id" | "authorId" | "createdAt" | "sample">;

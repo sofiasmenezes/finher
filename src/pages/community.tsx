@@ -1,7 +1,14 @@
-import { CalendarDays, Coffee, HandHeart, MessageCircleQuestion, ShieldCheck, Users, UsersRound, type LucideIcon } from "lucide-react";
+import { useMemo } from "react";
+import { Link } from "react-router-dom";
+import { ArrowRight, CalendarDays, Coffee, HandHeart, HeartHandshake, MessageCircleQuestion, Plus, ShieldCheck, Users, UsersRound, type LucideIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { GROUPS, MENTORS } from "@/content/catalog";
+import { Button } from "@/components/ui/button";
+import { GROUPS, MENTORS, SAMPLE_THERAPISTS } from "@/content/catalog";
 import { fmt, useT } from "@/i18n";
+import { paths } from "@/lib/routes";
+import { rankBySimilarity, themesFor, withSamples } from "@/lib/support";
+import { useTherapists } from "@/pages/support";
+import { useAuth } from "@/providers/auth";
 
 const PLANNED_ICONS: LucideIcon[] = [MessageCircleQuestion, Users, UsersRound, HandHeart, CalendarDays, Coffee];
 
@@ -11,6 +18,62 @@ const initials = (name: string) =>
     .map((p) => p[0])
     .slice(0, 2)
     .join("");
+
+/** The live part of the community today: psychologists recommended by members. */
+function TherapistsSection() {
+  const t = useT();
+  const C = t.community;
+  const { profile } = useAuth();
+  const { recs, saved } = useTherapists();
+  const all = useMemo(() => withSamples(recs ?? [], SAMPLE_THERAPISTS), [recs]);
+  const themes = useMemo(() => themesFor(saved, profile?.goals ?? []), [saved, profile?.goals]);
+  const shown = (rankBySimilarity(all, themes).length ? rankBySimilarity(all, themes) : all).slice(0, 3);
+  const real = recs?.length ?? 0;
+
+  return (
+    <section aria-labelledby="therapists-title" className="rounded-2xl border bg-card p-5 sm:p-6">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="flex gap-4">
+          <span className="grid size-12 shrink-0 place-items-center rounded-full bg-primary text-primary-foreground" aria-hidden="true">
+            <HeartHandshake className="size-5" />
+          </span>
+          <div>
+            <h2 id="therapists-title" className="text-2xl font-semibold">
+              {C.therapistsTitle}
+            </h2>
+            <p className="mt-1 max-w-2xl text-sm text-muted-foreground">{C.therapistsBody}</p>
+            {real > 0 && <p className="label-mono mt-2 text-primary">{fmt(C.therapistsCount, { count: real })}</p>}
+          </div>
+        </div>
+        <div className="flex shrink-0 flex-wrap gap-2">
+          <Button asChild variant="outline" size="sm">
+            <Link to={`${paths.support}?indicar=1`}>
+              <Plus /> {C.therapistsAdd}
+            </Link>
+          </Button>
+          <Button asChild size="sm">
+            <Link to={paths.support}>
+              {C.therapistsOpen} <ArrowRight />
+            </Link>
+          </Button>
+        </div>
+      </div>
+      <ul className="mt-5 grid gap-3 md:grid-cols-3">
+        {shown.map((r) => (
+          <li key={r.id} className="flex flex-col gap-2 rounded-xl bg-muted p-4 text-sm">
+            <p className="flex flex-wrap items-center gap-2 font-semibold">
+              {r.therapistName} {r.sample && <Badge variant="outline">{t.support.sample}</Badge>}
+            </p>
+            <p className="text-muted-foreground">
+              {t.support.modalities[r.modality]} · {t.support.prices[r.price]}
+            </p>
+            <p className="text-xs text-muted-foreground">{r.themes.map((th) => t.support.themes[th]).join(" · ")}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
 
 export default function CommunityPage() {
   const t = useT();
@@ -26,6 +89,8 @@ export default function CommunityPage() {
           {C.soonNote}
         </p>
       </header>
+
+      <TherapistsSection />
 
       <section aria-labelledby="planned-title">
         <h2 id="planned-title" className="text-2xl font-semibold">

@@ -3,7 +3,7 @@
  * moves into Supabase tables (trails, lessons, mentors, groups); the shapes match.
  * Mentor and group entries are fictional sample data and are labeled as such.
  */
-import type { AreaId, CareerStageId, GoalId, SkillId } from "@/lib/domain";
+import type { AreaId, CareerStageId, GoalId, SkillId, TherapistRecommendation } from "@/lib/domain";
 
 export interface TrailMeta {
   id: string;
@@ -188,5 +188,58 @@ export const GROUPS: GroupMeta[] = [
     areas: ["notSure", "fintech", "riskCompliance", "wealthManagement"],
     goals: ["changeCareer", "network", "understandMarket"],
     stages: ["transition", "returning", "newcomer"],
+  },
+];
+
+/**
+ * Fictional psychologist recommendations shown as a preview while the community
+ * has fewer than three real ones. Always labeled as examples in the UI; no real
+ * names, registrations or contacts.
+ */
+export const SAMPLE_THERAPISTS: TherapistRecommendation[] = [
+  {
+    id: "sample-therapist-1",
+    authorId: "",
+    authorName: "Juliana",
+    therapistName: "Psicóloga de exemplo A",
+    crp: "",
+    modality: "online",
+    city: "",
+    price: "private",
+    contact: "",
+    themes: ["impostor", "passed-over", "anxiety"],
+    comment: "Me ajudou a separar o que era insegurança minha do que era um problema real do ambiente, e a me preparar para a conversa sobre promoção.",
+    createdAt: "2026-10-01T12:00:00.000Z",
+    sample: true,
+  },
+  {
+    id: "sample-therapist-2",
+    authorId: "",
+    authorName: "",
+    therapistName: "Psicólogo de exemplo B",
+    crp: "",
+    modality: "both",
+    city: "São Paulo",
+    price: "social",
+    contact: "",
+    themes: ["burnout", "anxiety", "career-change"],
+    comment: "Atende a preço social e entende bem a rotina de quem trabalha em mesa de operação.",
+    createdAt: "2026-09-20T12:00:00.000Z",
+    sample: true,
+  },
+  {
+    id: "sample-therapist-3",
+    authorId: "",
+    authorName: "Renata",
+    therapistName: "Psicóloga de exemplo C",
+    crp: "",
+    modality: "online",
+    city: "",
+    price: "insurance",
+    contact: "",
+    themes: ["family", "interrupted", "harassment"],
+    comment: "Foi essencial no retorno da licença-maternidade e para lidar com comentários da equipe.",
+    createdAt: "2026-09-05T12:00:00.000Z",
+    sample: true,
   },
 ];

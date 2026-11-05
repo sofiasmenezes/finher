@@ -1,4 +1,4 @@
-import type { AppUser, OnboardingAnswers, Profile, SavedSituation } from "@/lib/domain";
+import type { AppUser, OnboardingAnswers, Profile, SavedSituation, TherapistRecommendation } from "@/lib/domain";
 import { BackendError, type Backend } from "./types";
 
 /**
@@ -10,6 +10,8 @@ const SESSION_KEY = "elevar-demo-session";
 const profileKey = (id: string) => `elevar-demo-profile-${id}`;
 const situationsKey = (id: string) => `elevar-demo-situations-${id}`;
 const checklistKey = (id: string) => `elevar-demo-checklist-${id}`;
+/** Shared by every demo account in this browser, like the real community would be. */
+const THERAPISTS_KEY = "finher-demo-therapists";
 
 interface StoredUser {
   id: string;
@@ -57,6 +59,10 @@ export function createDemoBackend(): Backend {
 
     async getUser() {
       return currentUser();
+    },
+
+    async getAccessToken() {
+      return null;
     },
 
     onAuthChange(cb) {
@@ -160,6 +166,24 @@ export function createDemoBackend(): Backend {
       write(checklistKey(userId), [...set]);
     },
 
+    async listTherapistRecommendations() {
+      return read<TherapistRecommendation[]>(THERAPISTS_KEY, []).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+    },
+
+    async addTherapistRecommendation(userId, input) {
+      await delay();
+      const rec: TherapistRecommendation = { ...input, id: crypto.randomUUID(), authorId: userId, createdAt: new Date().toISOString() };
+      write(THERAPISTS_KEY, [rec, ...read<TherapistRecommendation[]>(THERAPISTS_KEY, [])]);
+      return rec;
+    },
+
+    async deleteTherapistRecommendation(userId, id) {
+      write(
+        THERAPISTS_KEY,
+        read<TherapistRecommendation[]>(THERAPISTS_KEY, []).filter((r) => !(r.id === id && r.authorId === userId)),
+      );
+    },
+
     async deleteAccount() {
       const u = currentUser();
       if (!u) return;
@@ -169,6 +193,7 @@ export function createDemoBackend(): Backend {
       localStorage.removeItem(profileKey(u.id));
       localStorage.removeItem(situationsKey(u.id));
       localStorage.removeItem(checklistKey(u.id));
+      write(THERAPISTS_KEY, read<TherapistRecommendation[]>(THERAPISTS_KEY, []).filter((r) => r.authorId !== u.id));
       localStorage.removeItem(SESSION_KEY);
       emit(null);
     },

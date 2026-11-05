@@ -27,6 +27,10 @@ const StoriesPage = named(() => import("@/pages/stories"), "StoriesPage");
 const StoryPage = named(() => import("@/pages/stories"), "StoryPage");
 const NavigatorPage = named(() => import("@/pages/navigator"), "NavigatorPage");
 const PlaybookPage = named(() => import("@/pages/navigator"), "PlaybookPage");
+const SupportPage = named(() => import("@/pages/support"), "SupportPage");
+const SoftSkillsPage = named(() => import("@/pages/soft-skills"), "SoftSkillsPage");
+const SoftSkillPage = named(() => import("@/pages/soft-skills"), "SoftSkillPage");
+const AssistantPage = lazy(() => import("@/pages/assistant"));
 import { AuthProvider, useAuth } from "@/providers/auth";
 import { ThemeProvider } from "@/providers/theme";
 
@@ -120,7 +124,11 @@ function Chrome() {
             <Route path="learn/areas/:areaId" element={<AreaGuidePage />} />
             <Route path="learn/topics/:topicId" element={<TopicPage />} />
             <Route path="challenges" element={<NavigatorPage />} />
+            <Route path="challenges/support" element={<SupportPage />} />
             <Route path="challenges/:playbookId/:savedId?" element={<PlaybookPage />} />
+            <Route path="soft-skills" element={<SoftSkillsPage />} />
+            <Route path="soft-skills/:skillId" element={<SoftSkillPage />} />
+            <Route path="assistant" element={<AssistantPage />} />
             <Route path="family" element={<FamilyPage />} />
             <Route path="family/:phaseId" element={<FamilyPhasePage />} />
             <Route path="stories" element={<StoriesPage />} />

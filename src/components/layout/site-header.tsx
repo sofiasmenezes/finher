@@ -13,6 +13,7 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
 
   const links = [
+    { href: "#about", label: t.nav.about },
     { href: "#how", label: t.nav.howItWorks },
     { href: "#universities", label: t.nav.forUniversities },
     { href: "#faq", label: t.nav.faq },

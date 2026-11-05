@@ -2,43 +2,9 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowRight, Search, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { AREA_GUIDES, FAMILY_PHASES, INTERVIEWS, PLAYBOOKS, TOPICS } from "@/content/loader";
 import { fmt, useT } from "@/i18n";
-import { paths } from "@/lib/routes";
+import { buildIndex, fold, type Entry } from "@/lib/search-index";
 import { cn } from "@/lib/utils";
-
-type Kind = "area" | "topic" | "playbook" | "phase" | "story";
-interface Entry {
-  kind: Kind;
-  title: string;
-  summary: string;
-  to: string;
-  haystack: string;
-}
-
-/** Lowercase and strip accents so "negociacao" finds "negociação". */
-const fold = (s: string) =>
-  s
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
-    .toLowerCase();
-
-function buildIndex(): Entry[] {
-  const entry = (kind: Kind, title: string, summary: string, to: string): Entry => ({
-    kind,
-    title,
-    summary,
-    to,
-    haystack: fold(`${title} ${summary}`),
-  });
-  return [
-    ...PLAYBOOKS.map((p) => entry("playbook", p.title, p.summary, paths.playbook(p.id))),
-    ...AREA_GUIDES.map((a) => entry("area", a.title, a.summary, paths.area(a.id))),
-    ...TOPICS.map((t) => entry("topic", t.title, t.summary, paths.topic(t.id))),
-    ...FAMILY_PHASES.map((f) => entry("phase", f.title, f.summary, paths.phase(f.id))),
-    ...INTERVIEWS.map((s) => entry("story", s.title, s.summary, paths.story(s.id))),
-  ];
-}
 
 /** Search across all content. Opens from the header button or with Ctrl/⌘ + K. */
 export function QuickSearch({ className }: { className?: string }) {
@@ -90,7 +56,7 @@ export function QuickSearch({ className }: { className?: string }) {
       >
         <Search className="size-4 shrink-0" aria-hidden="true" />
         <span className="hidden flex-1 text-left sm:inline">{S.placeholder}</span>
-        <span className="sm:hidden">{S.open}</span>
+        <span className="sr-only">{S.open}</span>
         <kbd className="hidden font-mono text-xs sm:inline">⌘K</kbd>
       </button>
 

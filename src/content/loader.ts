@@ -243,6 +243,50 @@ export function getPhase(id: string) {
   return FAMILY_PHASES.find((p) => p.id === id);
 }
 
+/* ---------------- Soft skills ---------------- */
+
+export interface SoftSkill {
+  id: string;
+  order: number;
+  icon: string;
+  title: string;
+  summary: string;
+  sections: { heading: string; html: string; text: string }[];
+  /** Exercises under "## Pratique", saved in the same private checklist as Career & Family. */
+  practice: { id: string; text: string }[];
+}
+
+const PRACTICE = ["pratique", "practice"];
+
+export const SOFT_SKILLS: SoftSkill[] = safeMap(
+  files("soft-skills"),
+  ({ path, meta, body }) => {
+    if (!meta.id) throw new Error(`${path}: needs an id`);
+    const id = String(meta.id);
+    const secs = sections(body);
+    const practiceText = secs.find((s) => PRACTICE.includes(norm(s.heading)))?.text ?? "";
+    const practice = practiceText
+      .split("\n")
+      .map((l) => l.match(/^\s*[-*]\s+(.*)$/)?.[1]?.trim())
+      .filter((x): x is string => !!x)
+      .map((text) => ({ id: `soft-${id}:${slug(text)}`, text }));
+    return {
+      id,
+      order: Number(meta.order ?? 99),
+      icon: String(meta.icon ?? ""),
+      title: String(meta.title ?? id),
+      summary: String(meta.summary ?? ""),
+      sections: secs.filter((s) => !PRACTICE.includes(norm(s.heading))).map((s) => ({ heading: s.heading, html: md(s.text), text: s.text })),
+      practice,
+    };
+  },
+  (f) => f.path,
+).sort((a, b) => a.order - b.order);
+
+export function getSoftSkill(id: string) {
+  return SOFT_SKILLS.find((s) => s.id === id);
+}
+
 /* ---------------- Areas of the market ---------------- */
 
 export interface AreaGuide {

@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, Building2, ExternalLink, HeartHandshake, Info, Pencil, Route, Users } from "lucide-react";
+import { ArrowRight, Bot, Building2, ExternalLink, HeartHandshake, Info, Pencil, Route, Users } from "lucide-react";
 import { SkillsGapChart } from "@/components/charts/skills-gap-chart";
 import { Prose } from "@/components/content/blocks";
 import { Badge } from "@/components/ui/badge";
@@ -101,6 +101,22 @@ export default function OverviewPage({ profile }: { profile: Profile & Onboardin
           ))}
         </ol>
       </section>
+
+      <Link
+        to={paths.assistant}
+        className="group flex flex-col gap-4 rounded-2xl border bg-card p-5 transition-shadow hover:shadow-md sm:flex-row sm:items-center"
+      >
+        <span className="grid size-11 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
+          <Bot className="size-5" aria-hidden="true" />
+        </span>
+        <span className="flex min-w-0 flex-1 flex-col">
+          <span className="font-semibold">{V.assistantTitle}</span>
+          <span className="text-sm text-muted-foreground">{V.assistantBody}</span>
+        </span>
+        <span className="inline-flex items-center gap-1 text-sm font-semibold text-primary">
+          {V.assistantCta} <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+        </span>
+      </Link>
 
       <div className="grid gap-6 lg:grid-cols-[1.25fr_1fr]">
         <Card>

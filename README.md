@@ -2,7 +2,7 @@
 
 Plataforma educativa para apoiar, informar e conectar mulheres que querem entrar, permanecer ou crescer no mercado financeiro. Projeto acadêmico independente. Não faz operações, não guarda dinheiro e não recomenda investimentos.
 
-**Seções:** Visão geral, Educação, Comunidade (em breve) e Trajetórias. O idioma padrão é português do Brasil.
+**Seções:** Meu caminho, Assistente FinHer (IA), Trilha, Desafios (com Apoio psicológico), Soft skills, Carreira e família, Histórias e Comunidade (em breve). A página inicial tem a seção Quem somos. O idioma padrão é português do Brasil.
 
 ## Rodar
 
@@ -18,6 +18,18 @@ Sem as chaves do Supabase, o app roda em **modo de demonstração**: contas e re
 1. Crie um projeto e rode os arquivos de `supabase/migrations/` em ordem (editor SQL ou `supabase db push`).
 2. Copie `.env.example` para `.env.local` e preencha `VITE_SUPABASE_URL` e `VITE_SUPABASE_ANON_KEY`.
 
+## Assistente FinHer (IA)
+
+A assistente responde dúvidas das usuárias com o Claude, da Anthropic, por uma função da Vercel em `api/assistant.ts`. A chave fica só no servidor.
+
+1. Crie uma chave em [platform.claude.com](https://platform.claude.com) e adicione na Vercel, em **Settings → Environment Variables**, como `ANTHROPIC_API_KEY`.
+2. Opcional: `ASSISTANT_MODEL` troca o modelo (padrão: `claude-opus-5-5`).
+3. Com o Supabase configurado, só quem está logada consegue usar a assistente.
+
+Sem a chave (ou rodando com `npm run dev`, que não executa funções), a assistente continua funcionando de forma simples: busca no conteúdo do FinHer e indica os guias mais próximos da pergunta. Para testar a IA localmente, use `vercel dev`.
+
+O comportamento da assistente (tom, limites, quando indicar o CVV) fica no texto `SYSTEM_PROMPT` dentro de `api/assistant.ts`.
+
 ## Publicar na Vercel
 
 O repositório já vem configurado para **um único projeto** na Vercel (`vercel.json`): instala com `npm ci`, publica com `npm run build` e serve a pasta `dist`. Qualquer endereço (como `/app/education`) abre o app, para os links diretos funcionarem.
@@ -31,7 +43,8 @@ O repositório já vem configurado para **um único projeto** na Vercel (`vercel
 
 | Caminho | O que é |
 |---|---|
-| `content/` | Conteúdo editável sem programar: guias de áreas, empresas, Navegador de desafios, Carreira e família, histórias, ajuda por país. Veja `content/README.md` |
+| `content/` | Conteúdo editável sem programar: guias de áreas, empresas, Navegador de desafios, Soft skills, Carreira e família, histórias, ajuda por país. Veja `content/README.md` |
+| `api/assistant.ts` | Função da Vercel da Assistente FinHer |
 | `docs/kit-entrevistas.md` | Roteiro, termo de consentimento (modelo) e checklist para as histórias reais |
 | `src/i18n/pt-BR.ts` | Todo o texto da interface |
 | `src/index.css` | Cores, fontes e estilos base (claro e escuro) |

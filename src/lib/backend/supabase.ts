@@ -1,5 +1,5 @@
 import { createClient, type User } from "@supabase/supabase-js";
-import type { AppUser, OnboardingAnswers, Profile, SavedSituation } from "@/lib/domain";
+import type { AppUser, OnboardingAnswers, Profile, SavedSituation, TherapistRecommendation } from "@/lib/domain";
 import { BackendError, type Backend } from "./types";
 
 interface SituationRow {
@@ -21,6 +21,38 @@ const toSituation = (r: SituationRow): SavedSituation => ({
   createdAt: r.created_at,
   updatedAt: r.updated_at,
 });
+
+interface TherapistRow {
+  id: string;
+  user_id: string;
+  author_name: string;
+  therapist_name: string;
+  crp: string;
+  modality: TherapistRecommendation["modality"];
+  city: string;
+  price: TherapistRecommendation["price"];
+  contact: string;
+  themes: TherapistRecommendation["themes"];
+  comment: string;
+  created_at: string;
+}
+
+const toTherapist = (r: TherapistRow): TherapistRecommendation => ({
+  id: r.id,
+  authorId: r.user_id,
+  authorName: r.author_name,
+  therapistName: r.therapist_name,
+  crp: r.crp,
+  modality: r.modality,
+  city: r.city,
+  price: r.price,
+  contact: r.contact,
+  themes: r.themes,
+  comment: r.comment,
+  createdAt: r.created_at,
+});
+
+const THERAPIST_COLUMNS = "id, user_id, author_name, therapist_name, crp, modality, city, price, contact, themes, comment, created_at";
 
 const SITUATION_COLUMNS = "id, playbook_id, answers, note, status, created_at, updated_at";
 
@@ -68,6 +100,11 @@ export function createSupabaseBackend(url: string, anonKey: string): Backend {
     async getUser() {
       const { data } = await sb.auth.getSession();
       return toUser(data.session?.user);
+    },
+
+    async getAccessToken() {
+      const { data } = await sb.auth.getSession();
+      return data.session?.access_token ?? null;
     },
 
     onAuthChange(cb) {
@@ -184,6 +221,42 @@ export function createSupabaseBackend(url: string, anonKey: string): Backend {
       const { error } = done
         ? await sb.from("checklist_progress").upsert({ user_id: userId, item_id: itemId })
         : await sb.from("checklist_progress").delete().eq("user_id", userId).eq("item_id", itemId);
+      if (error) throw new BackendError("generic", error.message);
+    },
+
+    async listTherapistRecommendations() {
+      const { data, error } = await sb
+        .from("therapist_recommendations")
+        .select(THERAPIST_COLUMNS)
+        .order("created_at", { ascending: false })
+        .limit(200);
+      if (error) throw new BackendError("generic", error.message);
+      return (data as TherapistRow[]).map(toTherapist);
+    },
+
+    async addTherapistRecommendation(userId, input) {
+      const { data, error } = await sb
+        .from("therapist_recommendations")
+        .insert({
+          user_id: userId,
+          author_name: input.authorName,
+          therapist_name: input.therapistName,
+          crp: input.crp,
+          modality: input.modality,
+          city: input.city,
+          price: input.price,
+          contact: input.contact,
+          themes: input.themes,
+          comment: input.comment,
+        })
+        .select(THERAPIST_COLUMNS)
+        .single();
+      if (error) throw new BackendError("generic", error.message);
+      return toTherapist(data as TherapistRow);
+    },
+
+    async deleteTherapistRecommendation(userId, id) {
+      const { error } = await sb.from("therapist_recommendations").delete().eq("id", id).eq("user_id", userId);
       if (error) throw new BackendError("generic", error.message);
     },
 

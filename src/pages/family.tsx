@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ArrowLeft, ArrowRight, BookOpen, Check, ShieldCheck } from "lucide-react";
 import { CountryHelp, CountrySelect, LegalNotice, Prose } from "@/components/content/blocks";
@@ -8,38 +7,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { FAMILY_PHASES, getPhase, STORIES, type Story } from "@/content/loader";
 import { fmt, useT } from "@/i18n";
-import { backend } from "@/lib/backend";
+import { useChecklist } from "@/lib/use-checklist";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/providers/auth";
 import { paths } from "@/lib/routes";
-
-/** Checklist progress for the signed-in user, with optimistic toggling. */
-function useChecklist() {
-  const { user } = useAuth();
-  const [done, setDone] = useState<Set<string>>(new Set());
-  useEffect(() => {
-    if (user) backend.getChecklist(user.id).then((ids) => setDone(new Set(ids))).catch(() => {});
-  }, [user]);
-  const toggle = (id: string, value: boolean) => {
-    if (!user) return;
-    setDone((prev) => {
-      const next = new Set(prev);
-      if (value) next.add(id);
-      else next.delete(id);
-      return next;
-    });
-    backend.setChecklistItem(user.id, id, value).catch(() =>
-      // Roll back if the save failed.
-      setDone((prev) => {
-        const next = new Set(prev);
-        if (value) next.delete(id);
-        else next.add(id);
-        return next;
-      }),
-    );
-  };
-  return { done, toggle };
-}
 
 function StoryCard({ story }: { story: Story }) {
   const t = useT();

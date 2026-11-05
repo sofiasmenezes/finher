@@ -13,7 +13,7 @@ import {
   Mic,
   Network,
   ShieldQuestion,
-  Shirt,
+  HeartHandshake,
   Sparkles,
   Trash2,
   TrendingUp,
@@ -41,7 +41,7 @@ const AREA_ICONS: Record<string, LucideIcon> = {
   network: Network,
 };
 
-const COMING_ICONS: LucideIcon[] = [MessagesSquare, ShieldQuestion, Shirt];
+const COMING_ICONS: LucideIcon[] = [MessagesSquare, ShieldQuestion];
 
 const formatDate = (iso: string, locale: string) =>
   new Date(iso).toLocaleDateString(locale, { day: "numeric", month: "short", year: "numeric" });
@@ -82,6 +82,22 @@ export function NavigatorPage() {
         <p className="mt-3 max-w-2xl text-muted-foreground">{N.subtitle}</p>
         <SensitiveNote className="mt-6 max-w-2xl" />
       </header>
+
+      <Link
+        to={paths.support}
+        className="group flex flex-col gap-4 rounded-2xl border border-primary/25 bg-primary/5 p-5 transition-shadow hover:shadow-lg sm:flex-row sm:items-center sm:p-6"
+      >
+        <span className="grid size-12 shrink-0 place-items-center rounded-full bg-primary text-primary-foreground">
+          <HeartHandshake className="size-5" aria-hidden="true" />
+        </span>
+        <span className="flex min-w-0 flex-1 flex-col gap-1">
+          <span className="font-display text-lg font-bold">{t.support.cardTitle}</span>
+          <span className="text-sm text-muted-foreground">{t.support.cardBody}</span>
+        </span>
+        <span className="inline-flex items-center gap-1 text-sm font-semibold text-primary">
+          {N.supportLink} <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+        </span>
+      </Link>
 
       <section aria-labelledby="choose-title">
         <h2 id="choose-title" className="text-xl font-semibold">
@@ -320,11 +336,23 @@ function Plan({ playbook, answers }: { playbook: Playbook; answers: Record<strin
         </Card>
       </div>
 
-      <div className="flex flex-col gap-2 rounded-2xl border border-dashed p-4 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-sm text-muted-foreground">{N.aiSoon}</p>
-        <Button variant="outline" size="sm" disabled className="shrink-0">
-          <Sparkles /> {N.ai}
-        </Button>
+      <div className="grid gap-3 md:grid-cols-2">
+        <div className="flex flex-col gap-3 rounded-2xl border p-4">
+          <p className="text-sm text-muted-foreground">{N.aiBody}</p>
+          <Button asChild variant="outline" size="sm" className="self-start">
+            <Link to={`${paths.assistant}?q=${encodeURIComponent(fmt(N.aiPrompt, { title: playbook.title }))}`}>
+              <Sparkles /> {N.ai}
+            </Link>
+          </Button>
+        </div>
+        <div className="flex flex-col gap-3 rounded-2xl border border-primary/25 bg-primary/5 p-4">
+          <p className="text-sm">{N.supportCta}</p>
+          <Button asChild size="sm" className="self-start">
+            <Link to={`${paths.support}?tema=${encodeURIComponent(playbook.id)}`}>
+              <HeartHandshake /> {N.supportLink}
+            </Link>
+          </Button>
+        </div>
       </div>
 
       {playbook.legal && (

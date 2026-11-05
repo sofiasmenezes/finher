@@ -2,7 +2,10 @@ import { Suspense, useEffect, useState } from "react";
 import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
   BookOpen,
+  Bot,
   Compass,
+  House,
+  Presentation,
   Flag,
   HeartHandshake,
   Loader2,
@@ -47,12 +50,18 @@ interface NavItem {
 function useNavGroups(): { label?: string; items: NavItem[] }[] {
   const N = useT().app.nav;
   return [
-    { items: [{ to: paths.home, label: N.overview, icon: Compass }] },
+    {
+      items: [
+        { to: paths.home, label: N.overview, icon: Compass },
+        { to: paths.assistant, label: N.assistant, icon: Bot },
+      ],
+    },
     {
       label: N.explore,
       items: [
         { to: paths.learn, label: N.education, icon: BookOpen },
         { to: paths.challenges, label: N.challenges, icon: Flag },
+        { to: paths.softSkills, label: N.softSkills, icon: Presentation },
         { to: paths.family, label: N.family, icon: HeartHandshake },
         { to: paths.stories, label: N.stories, icon: Quote },
       ],
@@ -66,6 +75,7 @@ function SideNav({ onNavigate }: { onNavigate?: () => void }) {
   const groups = useNavGroups();
   return (
     <div className="flex flex-col gap-5">
+      <HomeLink onNavigate={onNavigate} />
       {groups.map((g, gi) => (
         <div key={gi}>
           {g.label && <p className="label-mono px-3 pb-2 text-muted-foreground">{g.label}</p>}
@@ -93,6 +103,24 @@ function SideNav({ onNavigate }: { onNavigate?: () => void }) {
         </div>
       ))}
     </div>
+  );
+}
+
+/** Back to the public home page (where "Quem somos" lives), always one click away after login. */
+function HomeLink({ onNavigate, compact }: { onNavigate?: () => void; compact?: boolean }) {
+  const N = useT().app.nav;
+  return (
+    <Link
+      to="/"
+      onClick={onNavigate}
+      className={cn(
+        "flex items-center gap-3 rounded-full text-[0.95rem] font-medium transition-colors hover:bg-accent",
+        compact ? "border px-3 py-2 text-sm" : "border border-dashed px-3 py-2.5 text-muted-foreground hover:text-foreground",
+      )}
+    >
+      <House className="size-4.5 shrink-0" aria-hidden="true" />
+      <span className={cn(compact && "sr-only sm:not-sr-only")}>{N.home}</span>
+    </Link>
   );
 }
 
@@ -127,6 +155,9 @@ function UserMenu() {
           <span className="block font-normal">{user?.email}</span>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
+        <DropdownMenuItem onSelect={() => navigate("/")}>
+          <House /> {t.app.nav.home}
+        </DropdownMenuItem>
         <DropdownMenuItem onSelect={() => navigate(paths.settings)}>
           <UserRound /> {t.app.nav.settings}
         </DropdownMenuItem>
@@ -150,7 +181,7 @@ function TabBar({ moreOpen, onMore }: { moreOpen: boolean; onMore: () => void })
     { to: paths.home, label: N.overview, icon: Compass },
     { to: paths.learn, label: N.education, icon: BookOpen },
     { to: paths.challenges, label: N.challenges, icon: Flag },
-    { to: paths.stories, label: N.stories, icon: Quote },
+    { to: paths.assistant, label: N.assistantShort, icon: Bot },
   ];
   const tab = "flex flex-1 flex-col items-center gap-1 pb-1 pt-2 text-[0.7rem] font-medium";
   return (
@@ -221,9 +252,12 @@ export function AppShell() {
       </aside>
 
       <div className="flex min-w-0 flex-col">
-        <header className="sticky top-[env(safe-area-inset-top,0px)] z-30 flex h-16 items-center gap-3 border-b bg-background/90 px-4 backdrop-blur sm:px-6 lg:border-b-0 lg:px-10">
+        <header className="sticky top-[env(safe-area-inset-top,0px)] z-30 flex h-16 items-center gap-2 sm:gap-3 border-b bg-background/90 px-4 backdrop-blur sm:px-6 lg:border-b-0 lg:px-10">
           <Logo to={paths.home} className="lg:hidden" />
           <QuickSearch className="ml-auto lg:ml-0 lg:w-full lg:max-w-md" />
+          <span className="lg:hidden">
+            <HomeLink compact />
+          </span>
           <div className="flex items-center gap-1 lg:ml-auto">
             <ThemeToggle />
             <UserMenu />

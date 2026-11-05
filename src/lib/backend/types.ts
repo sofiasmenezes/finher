@@ -1,4 +1,13 @@
-import type { AppUser, Jurisdiction, OnboardingAnswers, Profile, SavedSituation, SituationInput } from "@/lib/domain";
+import type {
+  AppUser,
+  Jurisdiction,
+  OnboardingAnswers,
+  Profile,
+  SavedSituation,
+  SituationInput,
+  TherapistRecommendation,
+  TherapistRecommendationInput,
+} from "@/lib/domain";
 
 export type BackendErrorCode = "invalidCredentials" | "emailTaken" | "generic";
 
@@ -24,6 +33,7 @@ export interface DataExport {
   profile: Profile | null;
   savedSituations: SavedSituation[];
   careerFamilyChecklist: string[];
+  therapistRecommendations: TherapistRecommendation[];
 }
 
 /**
@@ -34,6 +44,8 @@ export interface DataExport {
 export interface Backend {
   mode: "supabase" | "demo";
   getUser(): Promise<AppUser | null>;
+  /** Session token sent to our own serverless functions (null in demo mode). */
+  getAccessToken(): Promise<string | null>;
   onAuthChange(cb: (user: AppUser | null) => void): () => void;
   signUp(input: SignUpInput): Promise<{ user: AppUser | null; needsEmailConfirmation: boolean }>;
   signIn(email: string, password: string): Promise<AppUser>;
@@ -50,15 +62,22 @@ export interface Backend {
   getChecklist(userId: string): Promise<string[]>;
   setChecklistItem(userId: string, itemId: string, done: boolean): Promise<void>;
 
+  /** Psychologist recommendations shared by members (newest first). */
+  listTherapistRecommendations(): Promise<TherapistRecommendation[]>;
+  addTherapistRecommendation(userId: string, input: TherapistRecommendationInput): Promise<TherapistRecommendation>;
+  deleteTherapistRecommendation(userId: string, id: string): Promise<void>;
+
   deleteAccount(): Promise<void>;
 }
 
 /** Built from the other calls so both implementations export the same shape. */
 export async function exportData(b: Backend, user: AppUser): Promise<DataExport> {
-  const [profile, savedSituations, careerFamilyChecklist] = await Promise.all([
+  const [profile, savedSituations, careerFamilyChecklist, recommendations] = await Promise.all([
     b.getProfile(user.id),
     b.listSituations(user.id),
     b.getChecklist(user.id),
+    b.listTherapistRecommendations(),
   ]);
-  return { exportedAt: new Date().toISOString(), account: user, profile, savedSituations, careerFamilyChecklist };
+  const therapistRecommendations = recommendations.filter((r) => r.authorId === user.id);
+  return { exportedAt: new Date().toISOString(), account: user, profile, savedSituations, careerFamilyChecklist, therapistRecommendations };
 }

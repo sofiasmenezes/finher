@@ -15,5 +15,7 @@ export const paths = {
   softSkill: (id: string) => `/app/soft-skills/${id}`,
   assistant: "/app/assistant",
   community: "/app/community",
+  opportunities: "/app/community/opportunities",
+  materials: "/app/community/materials",
   settings: "/app/settings",
 } as const;

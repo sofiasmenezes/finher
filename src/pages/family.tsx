@@ -1,5 +1,5 @@
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, ArrowRight, BookOpen, Check, ShieldCheck } from "lucide-react";
+import { ArrowLeft, ArrowRight, BookOpen, Check, Headphones, ShieldCheck } from "lucide-react";
 import { CountryHelp, CountrySelect, LegalNotice, Prose } from "@/components/content/blocks";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -29,7 +29,12 @@ function StoryCard({ story }: { story: Story }) {
           {t.journeys.open} <ArrowRight className="size-4" aria-hidden="true" />
         </Link>
       ) : (
-        <Prose html={story.html} className="mt-3 text-sm" />
+        <>
+          <Prose html={story.html} className="mt-3 text-sm" />
+          <Link to={paths.story(story.id)} className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-primary">
+            <Headphones className="size-4" aria-hidden="true" /> {t.audio.listen}
+          </Link>
+        </>
       )}
     </article>
   );

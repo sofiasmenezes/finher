@@ -160,3 +160,50 @@ export interface TherapistRecommendation {
 }
 
 export type TherapistRecommendationInput = Omit<TherapistRecommendation, "id" | "authorId" | "createdAt" | "sample">;
+
+/* ---------------- Opportunity calendar alerts ---------------- */
+
+/** Her alert settings for the opportunity calendar. Private to her. */
+export interface OpportunityAlerts {
+  enabled: boolean;
+  /** Opportunity ids she has already been alerted about. */
+  seen: string[];
+}
+
+export const DEFAULT_ALERTS: OpportunityAlerts = { enabled: false, seen: [] };
+
+/* ---------------- Material recommendations (shared with the community) ---------------- */
+
+export const MATERIAL_TYPES = ["book", "podcast", "course", "video", "newsletter", "article", "other"] as const;
+export type MaterialType = (typeof MATERIAL_TYPES)[number];
+
+export const MATERIAL_TOPICS = [
+  "finance",
+  "personalFinance",
+  "career",
+  "leadership",
+  "communication",
+  "psychology",
+  "wellbeing",
+  "technology",
+] as const;
+export type MaterialTopic = (typeof MATERIAL_TOPICS)[number];
+
+/** A book, podcast, course… recommended by a member. Visible to every signed-in member. */
+export interface MaterialRecommendation {
+  id: string;
+  authorId: string;
+  authorName: string;
+  title: string;
+  /** Author, host or organization. */
+  creator: string;
+  type: MaterialType;
+  topics: MaterialTopic[];
+  url: string;
+  comment: string;
+  createdAt: string;
+  /** Picked by the FinHer team (shown first, labeled). */
+  curated?: boolean;
+}
+
+export type MaterialRecommendationInput = Omit<MaterialRecommendation, "id" | "authorId" | "createdAt" | "curated">;

@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, Clock3 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Clock3, Headphones } from "lucide-react";
 import { Prose } from "@/components/content/blocks";
+import { StoryAudio } from "@/components/content/story-audio";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { getStory, INTERVIEWS, STORY_PARTS } from "@/content/loader";
+import { getStory, INTERVIEWS, STORIES, STORY_PARTS } from "@/content/loader";
 import { fmt, useT } from "@/i18n";
 import { AREAS, CAREER_STAGES, type AreaId, type CareerStageId } from "@/lib/domain";
 import { paths } from "@/lib/routes";
@@ -20,6 +21,7 @@ export function StoriesPage() {
   const [stage, setStage] = useState<CareerStageId | "">("");
   const [area, setArea] = useState<AreaId | "">("");
 
+  const illustrative = STORIES.filter((s) => s.kind !== "interview");
   const stories = INTERVIEWS.filter((s) => (!stage || s.stages.includes(stage)) && (!area || s.areas.includes(area)));
 
   return (
@@ -87,6 +89,32 @@ export function StoriesPage() {
           </>
         )}
       </section>
+
+      {illustrative.length > 0 && (
+        <section aria-labelledby="illustrative-title">
+          <h2 id="illustrative-title" className="text-2xl font-semibold">
+            {J.illustrativeTitle}
+          </h2>
+          <p className="mt-2 max-w-2xl text-sm text-muted-foreground">{J.illustrativeBody}</p>
+          <ul className="mt-5 grid gap-4 md:grid-cols-2">
+            {illustrative.map((s) => (
+              <li key={s.id}>
+                <Link to={paths.story(s.id)} className="group flex h-full flex-col gap-2 rounded-2xl border bg-card p-5 transition-shadow hover:shadow-md">
+                  <Badge variant="outline" className="self-start">
+                    {s.kind === "composite" ? t.family.composite : t.family.illustrative}
+                  </Badge>
+                  <span className="font-display text-lg font-bold">{s.title}</span>
+                  {s.summary && <span className="text-sm text-muted-foreground">{s.summary}</span>}
+                  <span className="mt-auto inline-flex items-center gap-1.5 pt-2 text-sm font-semibold text-primary">
+                    <Headphones className="size-4" aria-hidden="true" /> {t.audio.listen}
+                    <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
     </div>
   );
 }
@@ -97,7 +125,7 @@ export function StoryPage() {
   const { storyId = "" } = useParams();
   const story = getStory(storyId);
 
-  if (!story || story.kind !== "interview") {
+  if (!story) {
     return (
       <div className="mx-auto max-w-3xl">
         <p className="rounded-2xl border border-dashed p-6 text-muted-foreground">{t.notFound.body}</p>
@@ -116,7 +144,13 @@ export function StoryPage() {
         <Link to={paths.stories} className="flex w-fit items-center gap-1 text-sm font-semibold text-primary">
           <ArrowLeft className="size-4" aria-hidden="true" /> {J.storyBack}
         </Link>
-        <Badge className="mt-4">{J.interview}</Badge>
+        {story.kind === "interview" ? (
+          <Badge className="mt-4">{J.interview}</Badge>
+        ) : (
+          <Badge variant="outline" className="mt-4">
+            {story.kind === "composite" ? t.family.composite : t.family.illustrative}
+          </Badge>
+        )}
         <h1 className="mt-2 text-3xl font-semibold sm:text-4xl">{story.title}</h1>
         <p className="mt-2 font-medium">
           {story.displayName}
@@ -126,6 +160,12 @@ export function StoryPage() {
           <p className="mt-1 text-sm text-muted-foreground">{fmt(J.interviewedOn, { date: formatDate(story.interviewDate, t.locale) })}</p>
         )}
       </div>
+      <StoryAudio story={story} />
+      {!STORY_PARTS.some((p) => story.parts[p]) && (
+        <section className="rounded-2xl border bg-card p-5 sm:p-6">
+          <Prose html={story.html} />
+        </section>
+      )}
       {STORY_PARTS.filter((p) => story.parts[p]).map((p, i) => (
         <section key={p} className="rounded-2xl border bg-card p-5 sm:p-6">
           <h2 className="flex items-baseline gap-3 text-lg font-bold">

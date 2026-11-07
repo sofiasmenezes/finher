@@ -3,6 +3,7 @@ id: phased-return
 title: A analista que negociou um retorno gradual
 kind: composite
 phase: return
+summary: Uma analista de crédito que planejou a volta da licença-maternidade com uma proposta por escrito.
 ---
 
 Júlia (não é uma pessoa real) era analista de crédito havia três anos quando saiu de licença-maternidade. Antes de sair, combinou com a gestora uma atualização mensal feita por uma colega e uma conversa duas semanas antes da volta.

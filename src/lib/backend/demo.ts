@@ -1,4 +1,4 @@
-import type { AppUser, OnboardingAnswers, Profile, SavedSituation, TherapistRecommendation } from "@/lib/domain";
+import { DEFAULT_ALERTS, type AppUser, type MaterialRecommendation, type OnboardingAnswers, type OpportunityAlerts, type Profile, type SavedSituation, type TherapistRecommendation } from "@/lib/domain";
 import { BackendError, type Backend } from "./types";
 
 /**
@@ -12,6 +12,8 @@ const situationsKey = (id: string) => `elevar-demo-situations-${id}`;
 const checklistKey = (id: string) => `elevar-demo-checklist-${id}`;
 /** Shared by every demo account in this browser, like the real community would be. */
 const THERAPISTS_KEY = "finher-demo-therapists";
+const MATERIALS_KEY = "finher-demo-materials";
+const alertsKey = (id: string) => `finher-demo-alerts-${id}`;
 
 interface StoredUser {
   id: string;
@@ -184,6 +186,29 @@ export function createDemoBackend(): Backend {
       );
     },
 
+    async listMaterials() {
+      return read<MaterialRecommendation[]>(MATERIALS_KEY, []).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+    },
+
+    async addMaterial(userId, input) {
+      await delay();
+      const rec: MaterialRecommendation = { ...input, id: crypto.randomUUID(), authorId: userId, createdAt: new Date().toISOString() };
+      write(MATERIALS_KEY, [rec, ...read<MaterialRecommendation[]>(MATERIALS_KEY, [])]);
+      return rec;
+    },
+
+    async deleteMaterial(userId, id) {
+      write(MATERIALS_KEY, read<MaterialRecommendation[]>(MATERIALS_KEY, []).filter((r) => !(r.id === id && r.authorId === userId)));
+    },
+
+    async getOpportunityAlerts(userId) {
+      return read<OpportunityAlerts>(alertsKey(userId), DEFAULT_ALERTS);
+    },
+
+    async setOpportunityAlerts(userId, alerts) {
+      write(alertsKey(userId), alerts);
+    },
+
     async deleteAccount() {
       const u = currentUser();
       if (!u) return;
@@ -194,6 +219,8 @@ export function createDemoBackend(): Backend {
       localStorage.removeItem(situationsKey(u.id));
       localStorage.removeItem(checklistKey(u.id));
       write(THERAPISTS_KEY, read<TherapistRecommendation[]>(THERAPISTS_KEY, []).filter((r) => r.authorId !== u.id));
+      write(MATERIALS_KEY, read<MaterialRecommendation[]>(MATERIALS_KEY, []).filter((r) => r.authorId !== u.id));
+      localStorage.removeItem(alertsKey(u.id));
       localStorage.removeItem(SESSION_KEY);
       emit(null);
     },

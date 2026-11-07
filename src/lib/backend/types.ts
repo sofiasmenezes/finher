@@ -7,6 +7,9 @@ import type {
   SituationInput,
   TherapistRecommendation,
   TherapistRecommendationInput,
+  MaterialRecommendation,
+  MaterialRecommendationInput,
+  OpportunityAlerts,
 } from "@/lib/domain";
 
 export type BackendErrorCode = "invalidCredentials" | "emailTaken" | "generic";
@@ -34,6 +37,8 @@ export interface DataExport {
   savedSituations: SavedSituation[];
   careerFamilyChecklist: string[];
   therapistRecommendations: TherapistRecommendation[];
+  materialRecommendations: MaterialRecommendation[];
+  opportunityAlerts: OpportunityAlerts;
 }
 
 /**
@@ -67,17 +72,37 @@ export interface Backend {
   addTherapistRecommendation(userId: string, input: TherapistRecommendationInput): Promise<TherapistRecommendation>;
   deleteTherapistRecommendation(userId: string, id: string): Promise<void>;
 
+  /** Books, podcasts, courses… shared by members (newest first). */
+  listMaterials(): Promise<MaterialRecommendation[]>;
+  addMaterial(userId: string, input: MaterialRecommendationInput): Promise<MaterialRecommendation>;
+  deleteMaterial(userId: string, id: string): Promise<void>;
+
+  getOpportunityAlerts(userId: string): Promise<OpportunityAlerts>;
+  setOpportunityAlerts(userId: string, alerts: OpportunityAlerts): Promise<void>;
+
   deleteAccount(): Promise<void>;
 }
 
 /** Built from the other calls so both implementations export the same shape. */
 export async function exportData(b: Backend, user: AppUser): Promise<DataExport> {
-  const [profile, savedSituations, careerFamilyChecklist, recommendations] = await Promise.all([
+  const [profile, savedSituations, careerFamilyChecklist, recommendations, materials, opportunityAlerts] = await Promise.all([
     b.getProfile(user.id),
     b.listSituations(user.id),
     b.getChecklist(user.id),
     b.listTherapistRecommendations(),
+    b.listMaterials(),
+    b.getOpportunityAlerts(user.id),
   ]);
   const therapistRecommendations = recommendations.filter((r) => r.authorId === user.id);
-  return { exportedAt: new Date().toISOString(), account: user, profile, savedSituations, careerFamilyChecklist, therapistRecommendations };
+  const materialRecommendations = materials.filter((m) => m.authorId === user.id);
+  return {
+    exportedAt: new Date().toISOString(),
+    account: user,
+    profile,
+    savedSituations,
+    careerFamilyChecklist,
+    therapistRecommendations,
+    materialRecommendations,
+    opportunityAlerts,
+  };
 }

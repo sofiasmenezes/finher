@@ -8,7 +8,18 @@ import { SOFT_SKILLS, getSoftSkill } from "@/content/loader";
 import { fmt, useT } from "@/i18n";
 import { paths } from "@/lib/routes";
 import { useChecklist } from "@/lib/use-checklist";
+import type { MaterialTopic } from "@/lib/domain";
 import { cn } from "@/lib/utils";
+import { RelatedMaterials } from "@/pages/materials";
+
+/** Which material topics help practise each skill. */
+const MATERIAL_TOPICS_FOR: Record<string, MaterialTopic[]> = {
+  oratoria: ["communication", "psychology"],
+  "presenca-executiva": ["communication", "leadership", "psychology"],
+  "etiqueta-corporativa": ["communication", "career"],
+  vestimenta: ["career", "leadership"],
+  "comunicacao-escrita": ["communication"],
+};
 
 const ICONS: Record<string, LucideIcon> = { mic: Mic, handshake: Handshake, shirt: Shirt, mail: Mail, sparkles: Sparkles };
 
@@ -150,6 +161,8 @@ export function SoftSkillPage() {
           </Button>
         </div>
       </div>
+
+      <RelatedMaterials topics={MATERIAL_TOPICS_FOR[skill.id] ?? ["communication", "psychology"]} />
 
       <nav className="flex flex-col gap-3 sm:flex-row sm:justify-between" aria-label={S.back}>
         {prev ? (

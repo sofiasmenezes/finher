@@ -18,7 +18,8 @@ Arquivos que começam com `_` são modelos e não aparecem no site.
 | `navigator/` | Situações do pilar Desafios |
 | `soft-skills/` | Guias do pilar Soft skills (oratória, etiqueta, vestimenta…) |
 | `family/` | Fases do guia Carreira e família  |
-| `stories/` | Histórias reais de entrevistas e histórias ilustrativas  |
+| `stories/` | Histórias reais de entrevistas e histórias ilustrativas (com modo áudio)  |
+| `opportunities/` | Eventos e prazos de processos seletivos do Calendário de oportunidades (Comunidade) |
 | `topics/` | Temas em destaque do pilar Trilha, com cursos indicados e fontes (Trilha) |
 | `legal/` | Onde buscar ajuda, um arquivo por país |
 
@@ -101,6 +102,36 @@ Cabeçalho: `id`, `name`, `reviewed` e `sources` (lista com `label` e `url`). S�
 
 - **Entrevistas reais:** copie `stories/_modelo-entrevista.md`. Só aparecem no site com `consent: true`.
 - **Histórias ilustrativas:** `kind: composite` ou `kind: illustrative`. O site mostra que não são pessoas reais.
+- **Modo áudio:** toda história tem o botão "Ouvir". Sem áudio gravado, o navegador lê o texto em voz alta, uma parte por vez. Para usar uma gravação (por exemplo, a própria entrevistada lendo), coloque o arquivo em `public/audio/` e adicione no cabeçalho `audio: /audio/nome-do-arquivo.mp3` (ou um link `https://`). Gravações de pessoas reais também precisam de consentimento por escrito.
+
+## Oportunidade (`opportunities/*.md`)
+
+Cada arquivo é um evento ou um prazo de processo seletivo voltado para mulheres. Aparece no Calendário de oportunidades e dispara o alerta para quem tem o perfil indicado.
+
+```
+---
+id: programa-estagio-2027      # único, nunca mude depois de publicado (os alertas usam o id)
+kind: deadline                 # deadline (prazo de inscrição) ou event (evento)
+title: Programa de estágio para mulheres em asset
+organizer: Nome da empresa ou iniciativa
+date: 2026-11-28               # data do prazo ou do evento (AAAA-MM-DD)
+endDate: 2026-11-29            # opcional, para eventos de mais de um dia
+time: "19h"                    # opcional
+location: Online               # ou cidade
+url: https://site-oficial      # link oficial, obrigatório para oportunidades reais
+summary: Uma frase para o card.
+# Para quem é (deixe a lista vazia [] quando for aberta a todas). Usa os mesmos valores do cadastro:
+stages: [internship, earlyCareer]
+areas: [assetManagement]
+goals: [getInternship]
+---
+
+Detalhes opcionais em Markdown.
+```
+
+- **Só oportunidades reais, com link oficial** conferido pela equipe. Os arquivos que começam com `exemplo-` têm `example: true`, são fictícios e aparecem com o selo "Exemplo". Apague-os quando houver oportunidades reais.
+- **Alertas:** uma usuária com alertas ligados recebe aviso quando todas as listas preenchidas (`stages`, `areas`, `goals`) combinam com o perfil dela. Oportunidades com as três listas vazias aparecem para todas, mas não disparam alerta.
+- Oportunidades passadas saem sozinhas da lista de próximas.
 
 ## Tema em destaque (`topics/*.md`)
 

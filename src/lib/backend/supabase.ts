@@ -1,5 +1,5 @@
 import { createClient, type User } from "@supabase/supabase-js";
-import type { AppUser, OnboardingAnswers, Profile, SavedSituation, TherapistRecommendation } from "@/lib/domain";
+import { DEFAULT_ALERTS, type AppUser, type MaterialRecommendation, type OnboardingAnswers, type Profile, type SavedSituation, type TherapistRecommendation } from "@/lib/domain";
 import { BackendError, type Backend } from "./types";
 
 interface SituationRow {
@@ -53,6 +53,34 @@ const toTherapist = (r: TherapistRow): TherapistRecommendation => ({
 });
 
 const THERAPIST_COLUMNS = "id, user_id, author_name, therapist_name, crp, modality, city, price, contact, themes, comment, created_at";
+
+interface MaterialRow {
+  id: string;
+  user_id: string;
+  author_name: string;
+  title: string;
+  creator: string;
+  type: MaterialRecommendation["type"];
+  topics: MaterialRecommendation["topics"];
+  url: string;
+  comment: string;
+  created_at: string;
+}
+
+const toMaterial = (r: MaterialRow): MaterialRecommendation => ({
+  id: r.id,
+  authorId: r.user_id,
+  authorName: r.author_name,
+  title: r.title,
+  creator: r.creator,
+  type: r.type,
+  topics: r.topics,
+  url: r.url,
+  comment: r.comment,
+  createdAt: r.created_at,
+});
+
+const MATERIAL_COLUMNS = "id, user_id, author_name, title, creator, type, topics, url, comment, created_at";
 
 const SITUATION_COLUMNS = "id, playbook_id, answers, note, status, created_at, updated_at";
 
@@ -257,6 +285,53 @@ export function createSupabaseBackend(url: string, anonKey: string): Backend {
 
     async deleteTherapistRecommendation(userId, id) {
       const { error } = await sb.from("therapist_recommendations").delete().eq("id", id).eq("user_id", userId);
+      if (error) throw new BackendError("generic", error.message);
+    },
+
+    async listMaterials() {
+      const { data, error } = await sb
+        .from("material_recommendations")
+        .select(MATERIAL_COLUMNS)
+        .order("created_at", { ascending: false })
+        .limit(300);
+      if (error) throw new BackendError("generic", error.message);
+      return (data as MaterialRow[]).map(toMaterial);
+    },
+
+    async addMaterial(userId, input) {
+      const { data, error } = await sb
+        .from("material_recommendations")
+        .insert({
+          user_id: userId,
+          author_name: input.authorName,
+          title: input.title,
+          creator: input.creator,
+          type: input.type,
+          topics: input.topics,
+          url: input.url,
+          comment: input.comment,
+        })
+        .select(MATERIAL_COLUMNS)
+        .single();
+      if (error) throw new BackendError("generic", error.message);
+      return toMaterial(data as MaterialRow);
+    },
+
+    async deleteMaterial(userId, id) {
+      const { error } = await sb.from("material_recommendations").delete().eq("id", id).eq("user_id", userId);
+      if (error) throw new BackendError("generic", error.message);
+    },
+
+    async getOpportunityAlerts(userId) {
+      const { data, error } = await sb.from("opportunity_alerts").select("enabled, seen").eq("user_id", userId).maybeSingle();
+      if (error) throw new BackendError("generic", error.message);
+      return data ? { enabled: !!data.enabled, seen: (data.seen as string[]) ?? [] } : DEFAULT_ALERTS;
+    },
+
+    async setOpportunityAlerts(userId, alerts) {
+      const { error } = await sb
+        .from("opportunity_alerts")
+        .upsert({ user_id: userId, enabled: alerts.enabled, seen: alerts.seen.slice(-500), updated_at: new Date().toISOString() });
       if (error) throw new BackendError("generic", error.message);
     },
 

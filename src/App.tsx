@@ -28,6 +28,8 @@ const StoryPage = named(() => import("@/pages/stories"), "StoryPage");
 const NavigatorPage = named(() => import("@/pages/navigator"), "NavigatorPage");
 const PlaybookPage = named(() => import("@/pages/navigator"), "PlaybookPage");
 const SupportPage = named(() => import("@/pages/support"), "SupportPage");
+const OpportunitiesPage = named(() => import("@/pages/opportunities"), "OpportunitiesPage");
+const MaterialsPage = named(() => import("@/pages/materials"), "MaterialsPage");
 const SoftSkillsPage = named(() => import("@/pages/soft-skills"), "SoftSkillsPage");
 const SoftSkillPage = named(() => import("@/pages/soft-skills"), "SoftSkillPage");
 const AssistantPage = lazy(() => import("@/pages/assistant"));
@@ -115,6 +117,7 @@ function Chrome() {
       <Suspense fallback={<FullPageLoader />}>
         <Routes>
           <Route path="/" element={<Landing />} />
+          <Route path="/quem-somos" element={<Landing />} />
           <Route path="/signup" element={<GuestOnly><SignupPage /></GuestOnly>} />
           <Route path="/login" element={<GuestOnly><LoginPage /></GuestOnly>} />
           <Route path="/onboarding" element={<RequireAuth><Onboarding /></RequireAuth>} />
@@ -134,6 +137,8 @@ function Chrome() {
             <Route path="stories" element={<StoriesPage />} />
             <Route path="stories/:storyId" element={<StoryPage />} />
             <Route path="community" element={<CommunityPage />} />
+            <Route path="community/opportunities" element={<OpportunitiesPage />} />
+            <Route path="community/materials" element={<MaterialsPage />} />
             <Route path="education" element={<Navigate to={paths.learn} replace />} />
             <Route path="education/areas/:id" element={<LegacyRedirect to={(p) => paths.area(p.id!)} />} />
             <Route path="education/topics/:id" element={<LegacyRedirect to={(p) => paths.topic(p.id!)} />} />

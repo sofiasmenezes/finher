@@ -1,9 +1,12 @@
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, CalendarDays, Coffee, HandHeart, HeartHandshake, MessageCircleQuestion, Plus, ShieldCheck, Users, UsersRound, type LucideIcon } from "lucide-react";
+import { ArrowRight, BellRing, BookOpen, CalendarDays, Coffee, HandHeart, HeartHandshake, MessageCircleQuestion, Plus, ShieldCheck, Users, UsersRound, type LucideIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { GROUPS, MENTORS, SAMPLE_THERAPISTS } from "@/content/catalog";
+import { GROUPS, MENTORS, SAMPLE_THERAPISTS, TEAM_MATERIALS } from "@/content/catalog";
+import { OPPORTUNITIES } from "@/content/loader";
+import { isUpcoming, today } from "@/lib/opportunities";
+import { MaterialCard } from "@/pages/materials";
 import { fmt, useT } from "@/i18n";
 import { paths } from "@/lib/routes";
 import { rankBySimilarity, themesFor, withSamples } from "@/lib/support";
@@ -75,6 +78,112 @@ function TherapistsSection() {
   );
 }
 
+function SectionHead({ id, icon: Icon, title, body, actions }: { id: string; icon: LucideIcon; title: string; body: string; actions: React.ReactNode }) {
+  return (
+    <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+      <div className="flex gap-4">
+        <span className="grid size-12 shrink-0 place-items-center rounded-full bg-primary text-primary-foreground" aria-hidden="true">
+          <Icon className="size-5" />
+        </span>
+        <div>
+          <h2 id={id} className="text-2xl font-semibold">
+            {title}
+          </h2>
+          <p className="mt-1 max-w-2xl text-sm text-muted-foreground">{body}</p>
+        </div>
+      </div>
+      <div className="flex shrink-0 flex-wrap gap-2">{actions}</div>
+    </div>
+  );
+}
+
+const shortDate = (iso: string, locale: string) => {
+  const d = new Date(`${iso}T12:00:00`);
+  return { day: d.toLocaleDateString(locale, { day: "2-digit" }), month: d.toLocaleDateString(locale, { month: "short" }).replace(".", "") };
+};
+
+function CalendarSection() {
+  const t = useT();
+  const C = t.community;
+  const O = t.opportunities;
+  const day = today();
+  const next = OPPORTUNITIES.filter((o) => isUpcoming(o, day)).slice(0, 3);
+  return (
+    <section aria-labelledby="calendar-title" className="rounded-2xl border bg-card p-5 sm:p-6">
+      <SectionHead
+        id="calendar-title"
+        icon={CalendarDays}
+        title={C.calendarTitle}
+        body={C.calendarBody}
+        actions={
+          <Button asChild size="sm">
+            <Link to={paths.opportunities}>
+              <BellRing /> {C.calendarOpen}
+            </Link>
+          </Button>
+        }
+      />
+      <ul className="mt-5 grid gap-3 md:grid-cols-3">
+        {next.map((o) => {
+          const d = shortDate(o.date, t.locale);
+          return (
+            <li key={o.id}>
+              <Link to={paths.opportunities} className="flex h-full gap-3 rounded-xl bg-muted p-4 text-sm transition-colors hover:bg-accent">
+                <span className={`flex w-12 shrink-0 flex-col items-center justify-center rounded-lg py-1.5 ${o.kind === "deadline" ? "bg-primary text-primary-foreground" : "bg-cta text-cta-foreground"}`}>
+                  <span className="tabular font-display text-lg font-bold leading-none">{d.day}</span>
+                  <span className="label-mono text-[0.58rem]">{d.month}</span>
+                </span>
+                <span className="min-w-0">
+                  <span className="label-mono block text-[0.6rem] text-primary">
+                    {O.kinds[o.kind]} {o.example && `· ${O.example}`}
+                  </span>
+                  <span className="block font-semibold leading-snug">{o.title}</span>
+                  <span className="block text-xs text-muted-foreground">{o.organizer}</span>
+                </span>
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+  );
+}
+
+function MaterialsSection() {
+  const C = useT().community;
+  return (
+    <section aria-labelledby="materials-title" className="rounded-2xl border bg-card p-5 sm:p-6">
+      <SectionHead
+        id="materials-title"
+        icon={BookOpen}
+        title={C.materialsTitle}
+        body={C.materialsBody}
+        actions={
+          <>
+            <Button asChild variant="outline" size="sm">
+              <Link to={`${paths.materials}?indicar=1`}>
+                <Plus /> {C.materialsAdd}
+              </Link>
+            </Button>
+            <Button asChild size="sm">
+              <Link to={paths.materials}>
+                {C.materialsOpen} <ArrowRight />
+              </Link>
+            </Button>
+          </>
+        }
+      />
+      <ul className="mt-5 grid gap-3 md:grid-cols-3">
+        {[TEAM_MATERIALS[1], TEAM_MATERIALS[4], TEAM_MATERIALS[3]].map((m) => (
+          <li key={m.id}>
+            <MaterialCard m={m} compact />
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
 export default function CommunityPage() {
   const t = useT();
   const C = t.community;
@@ -90,6 +199,8 @@ export default function CommunityPage() {
         </p>
       </header>
 
+      <CalendarSection />
+      <MaterialsSection />
       <TherapistsSection />
 
       <section aria-labelledby="planned-title">

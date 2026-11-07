@@ -1,6 +1,7 @@
 import { Suspense, useEffect, useState } from "react";
 import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
+  Bell,
   BookOpen,
   Bot,
   Compass,
@@ -27,10 +28,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useT } from "@/i18n";
+import { fmt, useT } from "@/i18n";
 import { backend } from "@/lib/backend";
 import { paths } from "@/lib/routes";
 import { cn } from "@/lib/utils";
+import { AlertsProvider, useAlerts } from "@/providers/alerts";
 import { useAuth } from "@/providers/auth";
 import { Logo } from "./logo";
 import { QuickSearch } from "./quick-search";
@@ -66,7 +68,7 @@ function useNavGroups(): { label?: string; items: NavItem[] }[] {
         { to: paths.stories, label: N.stories, icon: Quote },
       ],
     },
-    { label: N.connect, items: [{ to: paths.community, label: N.community, icon: Users, soon: true }] },
+    { label: N.connect, items: [{ to: paths.community, label: N.community, icon: Users }] },
   ];
 }
 
@@ -219,7 +221,35 @@ function TabBar({ moreOpen, onMore }: { moreOpen: boolean; onMore: () => void })
   );
 }
 
+/** Opportunity alerts: a bell with the number of new opportunities that fit her profile. */
+function AlertsBell() {
+  const O = useT().opportunities;
+  const { alerts, pending } = useAlerts();
+  if (!alerts.enabled) return null;
+  const count = pending.length;
+  return (
+    <Button asChild variant="ghost" size="icon">
+      <Link to={paths.opportunities} aria-label={count ? fmt(O.bellCount, { count }) : O.bell} className="relative">
+        <Bell />
+        {count > 0 && (
+          <span className="absolute right-1 top-1 grid min-w-4.5 place-items-center rounded-full bg-primary px-1 text-[0.65rem] font-bold leading-4.5 text-primary-foreground" aria-hidden="true">
+            {count > 9 ? "9+" : count}
+          </span>
+        )}
+      </Link>
+    </Button>
+  );
+}
+
 export function AppShell() {
+  return (
+    <AlertsProvider>
+      <Shell />
+    </AlertsProvider>
+  );
+}
+
+function Shell() {
   const t = useT();
   const { profile } = useAuth();
   const { pathname } = useLocation();
@@ -259,6 +289,7 @@ export function AppShell() {
             <HomeLink compact />
           </span>
           <div className="flex items-center gap-1 lg:ml-auto">
+            <AlertsBell />
             <ThemeToggle />
             <UserMenu />
           </div>

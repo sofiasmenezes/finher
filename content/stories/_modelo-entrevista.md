@@ -20,6 +20,9 @@ areas: [research]
 stages: [internship, earlyCareer]
 title: Uma frase que resuma a trajetória
 summary: Duas linhas sobre a história, para o card.
+# Opcional: áudio gravado (arquivo em public/audio/ ou link https://).
+# Sem ele, o site lê o texto em voz alta no modo áudio.
+# audio: /audio/nome-curto.mp3
 ---
 
 ## Antes do mercado

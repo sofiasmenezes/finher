@@ -73,14 +73,54 @@ export default function Landing() {
     <>
       <SiteHeader />
       <main id="main">
-        {/* Hero */}
-        <section className="relative overflow-hidden">
-          <div className="relative mx-auto grid max-w-7xl items-center gap-14 px-4 pb-16 pt-12 sm:px-6 sm:pt-16 lg:grid-cols-[1.15fr_1fr] lg:gap-20 lg:pb-24 lg:pt-20">
+        {/* Who we are: the first thing anyone sees when they open the site */}
+        <section id="about" className="scroll-mt-20" aria-labelledby="about-title">
+          <div className="mx-auto grid max-w-7xl gap-12 px-4 pb-16 pt-12 sm:px-6 sm:pt-16 lg:grid-cols-[1.15fr_1fr] lg:gap-20 lg:pb-24 lg:pt-20">
+            <div>
+              <Eyebrow>{L.about.eyebrow}</Eyebrow>
+              <h1 id="about-title" className="mt-6 text-[2.4rem] font-light leading-[1.05] tracking-[-0.025em] sm:text-6xl lg:text-[4.2rem]">
+                <HeroTitle text={L.about.title} />
+              </h1>
+              {L.about.body.map((p) => (
+                <p key={p} className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">
+                  {p}
+                </p>
+              ))}
+              <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+                <Button asChild size="lg">
+                  <Link to="/signup">
+                    {L.hero.ctaPrimary} <ArrowRight />
+                  </Link>
+                </Button>
+                <Button asChild variant="outline" size="lg">
+                  <a href="#start">{L.about.ctaSecondary}</a>
+                </Button>
+              </div>
+              <figure className="mt-10 max-w-xl border-l-2 border-primary pl-5">
+                <blockquote className="font-display text-2xl font-light">{L.about.quote}</blockquote>
+                <figcaption className="label-mono mt-3 text-muted-foreground">{L.about.quoteBy}</figcaption>
+              </figure>
+            </div>
+            <ol className="self-center">
+              {L.about.values.map((v, i) => (
+                <li key={v.title} className="border-b py-6 first:border-t">
+                  <span className="tabular text-sm font-semibold text-primary">{two(i + 1)}</span>
+                  <h2 className="mt-2 text-2xl font-medium">{v.title}</h2>
+                  <p className="mt-2 text-muted-foreground">{v.body}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+
+        {/* What FinHer does for you */}
+        <section id="start" className="relative scroll-mt-20 overflow-hidden border-t bg-card">
+          <div className="relative mx-auto grid max-w-7xl items-center gap-14 px-4 pb-16 pt-16 sm:px-6 lg:grid-cols-[1.15fr_1fr] lg:gap-20 lg:py-24">
             <div>
               <Eyebrow>{L.hero.eyebrow}</Eyebrow>
-              <h1 className="mt-6 text-[2.6rem] font-light leading-[1.05] tracking-[-0.025em] sm:text-6xl lg:text-[4.5rem]">
+              <h2 className="mt-6 text-[2.4rem] font-light leading-[1.05] tracking-[-0.025em] sm:text-5xl lg:text-6xl">
                 <HeroTitle text={L.hero.title} />
-              </h1>
+              </h2>
               <p className="mt-7 max-w-xl text-lg leading-relaxed text-muted-foreground">{L.hero.subtitle}</p>
               <div className="mt-9 flex flex-col gap-3 sm:flex-row">
                 <Button asChild size="lg">
@@ -97,36 +137,6 @@ export default function Landing() {
             <div className="lg:pl-4">
               <PathPreview />
             </div>
-          </div>
-        </section>
-
-        {/* Who we are */}
-        <section id="about" className="scroll-mt-20 border-t bg-card" aria-labelledby="about-title">
-          <div className="mx-auto grid max-w-7xl gap-12 px-4 py-16 sm:px-6 lg:grid-cols-[1.1fr_1fr] lg:gap-20 lg:py-24">
-            <div>
-              <Eyebrow>{L.about.eyebrow}</Eyebrow>
-              <h2 id="about-title" className="mt-4 text-4xl font-light leading-[1.1] sm:text-5xl">
-                <HeroTitle text={L.about.title} />
-              </h2>
-              {L.about.body.map((p) => (
-                <p key={p} className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">
-                  {p}
-                </p>
-              ))}
-              <figure className="mt-10 max-w-xl border-l-2 border-primary pl-5">
-                <blockquote className="font-display text-2xl font-light">{L.about.quote}</blockquote>
-                <figcaption className="label-mono mt-3 text-muted-foreground">{L.about.quoteBy}</figcaption>
-              </figure>
-            </div>
-            <ol className="self-center">
-              {L.about.values.map((v, i) => (
-                <li key={v.title} className="border-b py-6 first:border-t">
-                  <span className="tabular text-sm font-semibold text-primary">{two(i + 1)}</span>
-                  <h3 className="mt-2 text-2xl font-medium">{v.title}</h3>
-                  <p className="mt-2 text-muted-foreground">{v.body}</p>
-                </li>
-              ))}
-            </ol>
           </div>
         </section>
 

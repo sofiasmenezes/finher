@@ -1,4 +1,4 @@
-import { AREA_GUIDES, FAMILY_PHASES, INTERVIEWS, PLAYBOOKS, SOFT_SKILLS, TOPICS } from "@/content/loader";
+import { AREA_GUIDES, FAMILY_PHASES, STORIES, PLAYBOOKS, SOFT_SKILLS, TOPICS } from "@/content/loader";
 import { paths } from "@/lib/routes";
 
 export type Kind = "area" | "topic" | "playbook" | "phase" | "story" | "softSkill";
@@ -41,7 +41,7 @@ export function buildIndex(): Entry[] {
     ...AREA_GUIDES.map((a) => entry("area", a.title, a.summary, paths.area(a.id), join(a.sections))),
     ...TOPICS.map((t) => entry("topic", t.title, t.summary, paths.topic(t.id), join(t.sections))),
     ...FAMILY_PHASES.map((f) => entry("phase", f.title, f.summary, paths.phase(f.id), join(f.sections))),
-    ...INTERVIEWS.map((s) => entry("story", s.title, s.summary, paths.story(s.id), s.html)),
+    ...STORIES.map((s) => entry("story", s.title, s.summary, paths.story(s.id), s.html)),
   ];
 }
 

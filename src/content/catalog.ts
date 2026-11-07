@@ -3,7 +3,7 @@
  * moves into Supabase tables (trails, lessons, mentors, groups); the shapes match.
  * Mentor and group entries are fictional sample data and are labeled as such.
  */
-import type { AreaId, CareerStageId, GoalId, SkillId, TherapistRecommendation } from "@/lib/domain";
+import type { AreaId, CareerStageId, GoalId, MaterialRecommendation, SkillId, TherapistRecommendation } from "@/lib/domain";
 
 export interface TrailMeta {
   id: string;
@@ -241,5 +241,129 @@ export const SAMPLE_THERAPISTS: TherapistRecommendation[] = [
     comment: "Foi essencial no retorno da licença-maternidade e para lidar com comentários da equipe.",
     createdAt: "2026-09-05T12:00:00.000Z",
     sample: true,
+  },
+];
+
+/**
+ * Materials picked by the FinHer team, shown first and labeled "Seleção da equipe".
+ * Edit this list to add or remove picks; members add their own on the site.
+ */
+export const TEAM_MATERIALS: MaterialRecommendation[] = [
+  {
+    id: "team-faca-acontecer",
+    authorId: "",
+    authorName: "",
+    title: "Faça acontecer: mulheres, trabalho e a vontade de liderar",
+    creator: "Sheryl Sandberg",
+    type: "book",
+    topics: ["career", "leadership"],
+    url: "",
+    comment: "Sobre ocupar espaço, negociar e liderar, com dados e histórias do mundo corporativo.",
+    createdAt: "2026-11-01T12:00:00.000Z",
+    curated: true,
+  },
+  {
+    id: "team-psicologia-financeira",
+    authorId: "",
+    authorName: "",
+    title: "A psicologia financeira",
+    creator: "Morgan Housel",
+    type: "book",
+    topics: ["personalFinance", "psychology", "finance"],
+    url: "",
+    comment: "Histórias curtas sobre como emoções e comportamento pesam mais do que fórmulas nas decisões com dinheiro.",
+    createdAt: "2026-11-01T12:00:01.000Z",
+    curated: true,
+  },
+  {
+    id: "team-investidor-inteligente",
+    authorId: "",
+    authorName: "",
+    title: "O investidor inteligente",
+    creator: "Benjamin Graham",
+    type: "book",
+    topics: ["finance"],
+    url: "",
+    comment: "O clássico sobre análise fundamentalista e margem de segurança. Denso, mas vale a leitura com calma.",
+    createdAt: "2026-11-01T12:00:02.000Z",
+    curated: true,
+  },
+  {
+    id: "team-rapido-devagar",
+    authorId: "",
+    authorName: "",
+    title: "Rápido e devagar: duas formas de pensar",
+    creator: "Daniel Kahneman",
+    type: "book",
+    topics: ["psychology", "finance"],
+    url: "",
+    comment: "Vieses que afetam qualquer decisão, inclusive no mercado. Base da economia comportamental.",
+    createdAt: "2026-11-01T12:00:03.000Z",
+    curated: true,
+  },
+  {
+    id: "team-cnv",
+    authorId: "",
+    authorName: "",
+    title: "Comunicação não-violenta",
+    creator: "Marshall B. Rosenberg",
+    type: "book",
+    topics: ["communication", "psychology"],
+    url: "",
+    comment: "Um método prático para conversas difíceis, feedback e negociação sem confronto.",
+    createdAt: "2026-11-01T12:00:04.000Z",
+    curated: true,
+  },
+  {
+    id: "team-ted-falar-em-publico",
+    authorId: "",
+    authorName: "",
+    title: "TED Talks: o guia oficial do TED para falar em público",
+    creator: "Chris Anderson",
+    type: "book",
+    topics: ["communication"],
+    url: "",
+    comment: "Como estruturar e apresentar uma ideia, do curador das conferências TED. Ótimo par para o guia de oratória.",
+    createdAt: "2026-11-01T12:00:05.000Z",
+    curated: true,
+  },
+  {
+    id: "team-poder-da-presenca",
+    authorId: "",
+    authorName: "",
+    title: "O poder da presença",
+    creator: "Amy Cuddy",
+    type: "book",
+    topics: ["communication", "psychology"],
+    url: "",
+    comment: "Sobre postura, confiança e presença em momentos de pressão, como entrevistas e apresentações.",
+    createdAt: "2026-11-01T12:00:06.000Z",
+    curated: true,
+  },
+  {
+    id: "team-mindset",
+    authorId: "",
+    authorName: "",
+    title: "Mindset: a nova psicologia do sucesso",
+    creator: "Carol S. Dweck",
+    type: "book",
+    topics: ["psychology", "career"],
+    url: "",
+    comment: "A diferença entre acreditar que habilidades são fixas ou que se desenvolvem, e como isso muda a carreira.",
+    createdAt: "2026-11-01T12:00:07.000Z",
+    curated: true,
+  },
+  {
+    id: "team-inteligencia-emocional",
+    authorId: "",
+    authorName: "",
+    title: "Inteligência emocional",
+    creator: "Daniel Goleman",
+    type: "book",
+    topics: ["psychology", "leadership"],
+    url: "",
+    comment: "Autoconhecimento, autocontrole e empatia como habilidades que qualquer pessoa desenvolve.",
+    createdAt: "2026-11-01T12:00:08.000Z",
+    curated: true,
   },
 ];

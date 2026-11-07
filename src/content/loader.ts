@@ -9,7 +9,7 @@
  */
 import { marked } from "marked";
 import { parse as parseYaml } from "yaml";
-import type { AreaId, CareerStageId, Jurisdiction } from "@/lib/domain";
+import type { AreaId, CareerStageId, GoalId, Jurisdiction } from "@/lib/domain";
 
 const raw = import.meta.glob<string>("/content/**/*.md", { query: "?raw", import: "default", eager: true });
 
@@ -287,6 +287,59 @@ export function getSoftSkill(id: string) {
   return SOFT_SKILLS.find((s) => s.id === id);
 }
 
+/* ---------------- Opportunity calendar ---------------- */
+
+export interface Opportunity {
+  id: string;
+  /** event = something to attend; deadline = last day to apply. */
+  kind: "event" | "deadline";
+  title: string;
+  organizer: string;
+  /** YYYY-MM-DD. */
+  date: string;
+  endDate: string;
+  time: string;
+  location: string;
+  url: string;
+  summary: string;
+  html: string;
+  /** Who it is for. Empty lists mean "everyone". */
+  stages: CareerStageId[];
+  areas: AreaId[];
+  goals: GoalId[];
+  /** Fictional entries that show how the calendar works; always labeled. */
+  example: boolean;
+}
+
+const DAY_RE = /^\d{4}-\d{2}-\d{2}$/;
+
+export const OPPORTUNITIES: Opportunity[] = safeMap(
+  files("opportunities"),
+  ({ path, meta, body }) => {
+    const date = dateString(meta.date);
+    if (!meta.id || !DAY_RE.test(date)) throw new Error(`${path}: needs an id and a date (AAAA-MM-DD)`);
+    const url = String(meta.url ?? "");
+    return {
+      id: String(meta.id),
+      kind: (meta.kind === "event" ? "event" : "deadline") as Opportunity["kind"],
+      title: String(meta.title ?? meta.id),
+      organizer: String(meta.organizer ?? ""),
+      date,
+      endDate: DAY_RE.test(dateString(meta.endDate)) ? dateString(meta.endDate) : "",
+      time: meta.time ? String(meta.time) : "",
+      location: String(meta.location ?? ""),
+      url: /^https:\/\//.test(url) ? url : "",
+      summary: String(meta.summary ?? ""),
+      html: md(body),
+      stages: list(meta.stages) as CareerStageId[],
+      areas: list(meta.areas) as AreaId[],
+      goals: list(meta.goals) as GoalId[],
+      example: meta.example === true,
+    };
+  },
+  (f) => f.path,
+).sort((a, b) => a.date.localeCompare(b.date));
+
 /* ---------------- Areas of the market ---------------- */
 
 export interface AreaGuide {
@@ -437,6 +490,8 @@ export interface Story {
   areas: AreaId[];
   stages: CareerStageId[];
   interviewDate?: string;
+  /** Recorded audio (a file in /public/audio or an https link). Without it, the site reads the text aloud. */
+  audio?: string;
   parts: Partial<Record<StoryPart, string>>;
   html: string;
 }
@@ -466,6 +521,7 @@ export const STORIES: Story[] = files("stories")
       areas: list(meta.areas) as AreaId[],
       stages: list(meta.stages) as CareerStageId[],
       interviewDate: dateString(meta.interviewDate) || undefined,
+      audio: typeof meta.audio === "string" && /^(\/audio\/|https:\/\/)[^\s"]+$/.test(meta.audio) ? meta.audio : undefined,
       parts,
       html: md(body),
     };

@@ -30,6 +30,12 @@ Sem a chave (ou rodando com `npm run dev`, que não executa funções), a assist
 
 O comportamento da assistente (tom, limites, quando indicar o CVV) fica no texto `SYSTEM_PROMPT` dentro de `api/assistant.ts`.
 
+## Comunidade: calendário, alertas e materiais
+
+- **Calendário de oportunidades** (`/app/community/opportunities`): lê os arquivos de `content/opportunities/`. Os alertas são dentro do site (sino no topo) e cada oportunidade pode ir para a agenda do celular com um arquivo `.ics` que já traz lembrete.
+- **Indicação de materiais** (`/app/community/materials`): a seleção da equipe fica em `TEAM_MATERIALS` (`src/content/catalog.ts`); as indicações das usuárias ficam na tabela `material_recommendations`.
+- Com o Supabase, rode `supabase/migrations/0005_materials_and_alerts.sql`.
+
 ## Publicar na Vercel
 
 O repositório já vem configurado para **um único projeto** na Vercel (`vercel.json`): instala com `npm ci`, publica com `npm run build` e serve a pasta `dist`. Qualquer endereço (como `/app/education`) abre o app, para os links diretos funcionarem.

@@ -1,18 +1,24 @@
 import { useMemo } from "react";
-import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, ArrowRight, BookMarked, Bot, Clock, ExternalLink, GraduationCap, Layers, ListChecks, Sparkles } from "lucide-react";
+import { Link, useParams, useSearchParams } from "react-router-dom";
+import { ArrowLeft, ArrowRight, BookMarked, Check, ExternalLink, GraduationCap, ListChecks, Plus, Search, Sparkles } from "lucide-react";
 import { Prose } from "@/components/content/blocks";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { TRAILS, searchUrl, type TrailMaterial, type TrailMaterialType, type TrailMeta } from "@/content/catalog";
 import { AREA_GUIDES, TOPICS, getAreaGuide, getTopic } from "@/content/loader";
 import { fmt, formatDay, useT, type Messages } from "@/i18n";
 import { isOnboarded } from "@/lib/domain";
 import { buildRecommendations, type TrailReason } from "@/lib/path-engine";
 import { useAuth } from "@/providers/auth";
 import { paths } from "@/lib/routes";
+import { cn } from "@/lib/utils";
+import { TYPE_ICONS } from "@/pages/materials";
 
-const COMING_ICONS = [BookMarked, ListChecks, Bot];
+const COMING_ICONS = [BookMarked, ListChecks];
+
+/** Types in the order the filter shows them (only those that have materials). */
+const TYPE_ORDER: TrailMaterialType[] = ["book", "video", "course", "author", "article", "podcast"];
 
 function reasonText(t: Messages, r: TrailReason) {
   const R = t.education.reasons;
@@ -28,11 +34,113 @@ function reasonText(t: Messages, r: TrailReason) {
   }
 }
 
+function FilterChip({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
+  return (
+    <button
+      type="button"
+      aria-pressed={active}
+      onClick={onClick}
+      className={cn(
+        "inline-flex min-h-9 items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-sm font-medium transition-colors",
+        active ? "border-primary bg-primary text-primary-foreground" : "border-input bg-card hover:bg-accent",
+      )}
+    >
+      {active && <Check className="size-3.5" aria-hidden="true" />}
+      {children}
+    </button>
+  );
+}
+
+/** Where a material's button goes: its official link, or a search for it. */
+function MaterialLink({ m }: { m: TrailMaterial }) {
+  const E = useT().education;
+  const href = m.url || searchUrl(m);
+  const label = m.url ? E.open : m.type === "book" ? E.findBook : E.search;
+  const Icon = m.url ? ExternalLink : Search;
+  return (
+    <a href={href} target="_blank" rel="noopener noreferrer nofollow" className="inline-flex items-center gap-1 text-sm font-semibold text-primary">
+      {label} <Icon className="size-3.5" aria-hidden="true" />
+      <span className="sr-only">: {m.title}</span>
+    </a>
+  );
+}
+
+/** One line in a trail card: icon, type, title, who made it. */
+function MaterialRow({ m }: { m: TrailMaterial }) {
+  const E = useT().education;
+  const Icon = TYPE_ICONS[m.type];
+  return (
+    <li className="flex items-start gap-3 border-t py-3 first:border-t-0">
+      <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary" aria-hidden="true">
+        <Icon className="size-4" />
+      </span>
+      <div className="min-w-0 flex-1">
+        <p className="label-mono text-[0.62rem] text-primary">{E.types[m.type]}</p>
+        <p className="font-semibold leading-snug">{m.title}</p>
+        <p className="text-sm text-muted-foreground">{m.creator}</p>
+      </div>
+      <span className="shrink-0 pt-4">
+        <MaterialLink m={m} />
+      </span>
+    </li>
+  );
+}
+
+function MaterialTile({ m, trail }: { m: TrailMaterial; trail: TrailMeta }) {
+  const E = useT().education;
+  const Icon = TYPE_ICONS[m.type];
+  return (
+    <article className="flex h-full flex-col gap-3 rounded-2xl border bg-card p-5">
+      <div className="flex items-start gap-3">
+        <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary" aria-hidden="true">
+          <Icon className="size-5" />
+        </span>
+        <div className="min-w-0">
+          <p className="label-mono text-[0.62rem] text-primary">{E.types[m.type]}</p>
+          <h3 className="font-display text-lg font-bold leading-snug">{m.title}</h3>
+          <p className="text-sm text-muted-foreground">{m.creator}</p>
+        </div>
+      </div>
+      <p className="text-sm">{m.why}</p>
+      <ul className="flex flex-wrap gap-1.5 text-xs font-medium">
+        <li className="rounded-full bg-muted px-2.5 py-0.5 text-muted-foreground">{trail.title}</li>
+        {m.free && <li className="rounded-full bg-success/10 px-2.5 py-0.5 text-success">{E.free}</li>}
+        {m.language && <li className="rounded-full bg-muted px-2.5 py-0.5 text-muted-foreground">{m.language}</li>}
+      </ul>
+      <div className="mt-auto border-t pt-3">
+        <MaterialLink m={m} />
+      </div>
+    </article>
+  );
+}
+
+const isTrail = (v: string | null) => !!v && TRAILS.some((tr) => tr.id === v);
+const isType = (v: string | null): v is TrailMaterialType => !!v && (TYPE_ORDER as string[]).includes(v);
+
 export function EducationPage() {
   const t = useT();
   const E = t.education;
   const { profile } = useAuth();
   const rec = useMemo(() => (isOnboarded(profile) ? buildRecommendations(profile) : null), [profile]);
+  const [params, setParams] = useSearchParams();
+  const trailFilter = isTrail(params.get("tema")) ? params.get("tema") : null;
+  const typeFilter = isType(params.get("tipo")) ? (params.get("tipo") as TrailMaterialType) : null;
+
+  const set = (key: "tema" | "tipo", value: string | null) => {
+    const next = new URLSearchParams(params);
+    if (value) next.set(key, value);
+    else next.delete(key);
+    setParams(next, { replace: true, preventScrollReset: true });
+  };
+
+  const all = TRAILS.flatMap((trail) => trail.materials.map((m) => ({ m, trail })));
+  const types = TYPE_ORDER.filter((ty) => all.some(({ m }) => m.type === ty));
+  const listed = all.filter(({ m, trail }) => (!trailFilter || trail.id === trailFilter) && (!typeFilter || m.type === typeFilter));
+
+  const showTrail = (id: string) => {
+    set("tema", id);
+    document.getElementById("library")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-10">
@@ -53,26 +161,30 @@ export function EducationPage() {
               <li key={trail.id}>
                 <Card className="flex h-full flex-col">
                   <CardHeader>
-                    <span className="tabular font-mono text-sm font-semibold text-primary">0{i + 1}</span>
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="tabular font-mono text-sm font-semibold text-primary">0{i + 1}</span>
+                      <Badge variant="outline">{fmt(E.count, { count: trail.materials.length })}</Badge>
+                    </div>
                     <CardTitle>{trail.title}</CardTitle>
                     <CardDescription>{trail.summary}</CardDescription>
                   </CardHeader>
-                  <CardContent className="mt-auto flex flex-col gap-4">
+                  <CardContent className="mt-auto flex flex-col gap-3">
                     <p className="rounded-xl bg-primary/8 px-3 py-2 text-sm">
                       <span className="font-semibold text-primary">{E.why}: </span>
                       {reasonText(t, reason)}
                     </p>
-                    <div className="flex flex-wrap items-center justify-between gap-3">
-                      <p className="flex items-center gap-3 text-sm text-muted-foreground">
-                        <span className="inline-flex items-center gap-1">
-                          <Layers className="size-4" aria-hidden="true" /> {fmt(E.lessons, { count: trail.lessons })}
-                        </span>
-                        <span className="inline-flex items-center gap-1">
-                          <Clock className="size-4" aria-hidden="true" /> {fmt(E.minutes, { count: trail.minutes })}
-                        </span>
-                      </p>
-                      <Badge variant="outline">{E.lessonsSoon}</Badge>
-                    </div>
+                    <ul>
+                      {trail.materials.slice(0, 3).map((m) => (
+                        <MaterialRow key={m.id} m={m} />
+                      ))}
+                    </ul>
+                    <button
+                      type="button"
+                      onClick={() => showTrail(trail.id)}
+                      className="inline-flex items-center gap-1 self-start text-sm font-semibold text-primary"
+                    >
+                      {E.seeAll} <ArrowRight className="size-4" aria-hidden="true" />
+                    </button>
                   </CardContent>
                 </Card>
               </li>
@@ -80,6 +192,60 @@ export function EducationPage() {
           </ol>
         </section>
       )}
+
+      <section id="library" aria-labelledby="library-title" className="scroll-mt-24">
+        <h2 id="library-title" className="text-2xl font-semibold">
+          {E.libraryTitle}
+        </h2>
+        <p className="mt-1 text-muted-foreground">{E.librarySubtitle}</p>
+        <div className="mt-5 flex flex-col gap-4">
+          <div role="group" aria-label={E.filterTrail} className="flex flex-wrap items-center gap-2">
+            <span className="label-mono mr-1 w-14 text-muted-foreground">{E.filterTrail}</span>
+            <FilterChip active={!trailFilter} onClick={() => set("tema", null)}>
+              {E.all}
+            </FilterChip>
+            {TRAILS.map((tr) => (
+              <FilterChip key={tr.id} active={trailFilter === tr.id} onClick={() => set("tema", trailFilter === tr.id ? null : tr.id)}>
+                {tr.title}
+              </FilterChip>
+            ))}
+          </div>
+          <div role="group" aria-label={E.filterType} className="flex flex-wrap items-center gap-2">
+            <span className="label-mono mr-1 w-14 text-muted-foreground">{E.filterType}</span>
+            <FilterChip active={!typeFilter} onClick={() => set("tipo", null)}>
+              {E.all}
+            </FilterChip>
+            {types.map((ty) => (
+              <FilterChip key={ty} active={typeFilter === ty} onClick={() => set("tipo", typeFilter === ty ? null : ty)}>
+                {E.types[ty]}
+              </FilterChip>
+            ))}
+          </div>
+        </div>
+        {listed.length === 0 ? (
+          <p className="mt-5 rounded-2xl border border-dashed p-6 text-sm text-muted-foreground">{E.empty}</p>
+        ) : (
+          <ul className="mt-5 grid gap-4 md:grid-cols-2 lg:grid-cols-3" aria-live="polite">
+            {listed.map(({ m, trail }) => (
+              <li key={`${trail.id}-${m.id}`}>
+                <MaterialTile m={m} trail={trail} />
+              </li>
+            ))}
+          </ul>
+        )}
+        <div className="mt-5 flex flex-col gap-4 rounded-2xl border bg-primary/5 p-5 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="font-semibold">{E.suggestTitle}</p>
+            <p className="text-sm text-muted-foreground">{E.suggestBody}</p>
+          </div>
+          <Button asChild variant="outline" className="self-start sm:self-auto">
+            <Link to={`${paths.materials}?indicar=1`}>
+              <Plus /> {E.suggestCta}
+            </Link>
+          </Button>
+        </div>
+        <p className="mt-3 text-xs text-muted-foreground">{E.disclaimer}</p>
+      </section>
 
       {TOPICS.length > 0 && (
         <section aria-labelledby="topics-title">
@@ -134,7 +300,7 @@ export function EducationPage() {
         <h2 id="coming-title" className="text-xl font-semibold">
           {E.comingTitle}
         </h2>
-        <ul className="mt-4 grid gap-3 md:grid-cols-3">
+        <ul className="mt-4 grid gap-3 md:grid-cols-2">
           {E.coming.map((c, i) => {
             const Icon = COMING_ICONS[i] ?? BookMarked;
             return (

@@ -3,6 +3,7 @@ import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router-do
 import {
   Bell,
   BookOpen,
+  BriefcaseBusiness,
   Bot,
   Compass,
   House,
@@ -68,7 +69,13 @@ function useNavGroups(): { label?: string; items: NavItem[] }[] {
         { to: paths.stories, label: N.stories, icon: Quote },
       ],
     },
-    { label: N.connect, items: [{ to: paths.community, label: N.community, icon: Users }] },
+    {
+      label: N.connect,
+      items: [
+        { to: paths.community, label: N.community, icon: Users },
+        { to: paths.talents, label: N.talents, icon: BriefcaseBusiness },
+      ],
+    },
   ];
 }
 

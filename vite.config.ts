@@ -9,5 +9,6 @@ export default defineConfig(({ mode }) => ({
     alias: { "@": path.resolve(import.meta.dirname, "./src") },
   },
   // The single-file artifact inlines one script, so it can't load route chunks on demand.
-  build: mode === "artifact" ? { rolldownOptions: { output: { codeSplitting: false } } } : undefined,
+  // Images are inlined there too, since the single file can't load them from the server.
+  build: mode === "artifact" ? { assetsInlineLimit: 400_000, rolldownOptions: { output: { codeSplitting: false } } } : undefined,
 }));

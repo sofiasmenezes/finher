@@ -6,8 +6,6 @@ reviewed: 2026-10-17
 sources:
   - label: Sobre nós (site oficial)
     url: https://galapagoscapital.com/sobre-nos
-  - label: Programas de entrada (site oficial)
-    url: https://galapagoscapital.com/programas
   - label: Galapagos por ELAS, edição 2025 (canal oficial no YouTube)
     url: https://www.youtube.com/watch?v=Lue4NU6pYO0
 ---
@@ -17,6 +15,3 @@ A Galapagos Capital se apresenta como uma companhia de investimentos global, com
 
 ## Galapagos por ELAS
 Um programa de desenvolvimento para mulheres universitárias, com foco em protagonismo feminino no mercado financeiro. A primeira edição foi em 2024. O programa combina mentorias, treinamentos e um desafio em grupo, com o objetivo de propor soluções reais de inclusão feminina dentro e fora da empresa.
-
-## Programas de entrada
-A empresa descreve programas de estágio, estágio de férias, Summer Undergrad (para universitários do exterior, em São Paulo ou Miami) e Jovem Aprendiz. O processo seletivo informado tem três etapas: triagem de perfis, dinâmica de grupo online com RH e gestores e um painel presencial com sócios.

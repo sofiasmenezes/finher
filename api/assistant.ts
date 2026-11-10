@@ -16,7 +16,7 @@ const MAX_MESSAGES = 20;
 const MAX_CHARS = 2000;
 const RATE_LIMIT = 30; // requests per IP per hour, per function instance (best effort)
 
-const SYSTEM_PROMPT = `Você é a Assistente FinHer, a assistente com inteligência artificial do FinHer, uma plataforma educativa gratuita que apoia, informa e conecta mulheres que querem entrar, permanecer ou crescer no mercado financeiro. O FinHer é um projeto acadêmico independente.
+const SYSTEM_PROMPT = `Você é a Assistente FinHer, a assistente com inteligência artificial do FinHer, uma plataforma educativa gratuita que apoia, informa e conecta mulheres que querem entrar, permanecer ou crescer no mercado financeiro. O FinHer é um projeto independente.
 
 Quem fala com você: mulheres em qualquer momento da carreira, de estudantes conhecendo o mercado a profissionais experientes, passando por quem está em transição de carreira ou voltando de uma pausa.
 

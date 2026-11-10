@@ -1,5 +1,5 @@
 import { createClient, type User } from "@supabase/supabase-js";
-import { DEFAULT_ALERTS, type AppUser, type MaterialRecommendation, type OnboardingAnswers, type Profile, type SavedSituation, type TherapistRecommendation } from "@/lib/domain";
+import { DEFAULT_ALERTS, type AppUser, type RecruiterAccess, type TalentProfile, type MaterialRecommendation, type OnboardingAnswers, type Profile, type SavedSituation, type TherapistRecommendation } from "@/lib/domain";
 import { BackendError, type Backend } from "./types";
 
 interface SituationRow {
@@ -81,6 +81,75 @@ const toMaterial = (r: MaterialRow): MaterialRecommendation => ({
 });
 
 const MATERIAL_COLUMNS = "id, user_id, author_name, title, creator, type, topics, url, comment, created_at";
+
+interface TalentRow {
+  user_id: string;
+  visible: boolean;
+  share_cv: boolean;
+  name: string;
+  headline: string;
+  city: string;
+  career_stage: TalentProfile["careerStage"];
+  areas: TalentProfile["areas"];
+  program: TalentProfile["program"];
+  education: string;
+  graduation_year: number | null;
+  languages: TalentProfile["languages"];
+  certifications: TalentProfile["certifications"];
+  availability: TalentProfile["availability"];
+  work_modes: TalentProfile["workModes"];
+  about: string;
+  linkedin_url: string;
+  cv_url: string;
+  contact_email: string;
+  updated_at: string;
+}
+
+const toTalent = (r: TalentRow): TalentProfile => ({
+  userId: r.user_id,
+  visible: r.visible,
+  shareCv: r.share_cv,
+  name: r.name,
+  headline: r.headline,
+  city: r.city,
+  careerStage: r.career_stage,
+  areas: r.areas,
+  program: r.program,
+  education: r.education,
+  graduationYear: r.graduation_year,
+  languages: r.languages,
+  certifications: r.certifications,
+  availability: r.availability,
+  workModes: r.work_modes,
+  about: r.about,
+  linkedinUrl: r.linkedin_url,
+  cvUrl: r.cv_url,
+  contactEmail: r.contact_email,
+  updatedAt: r.updated_at,
+});
+
+const TALENT_COLUMNS =
+  "user_id, visible, share_cv, name, headline, city, career_stage, areas, program, education, graduation_year, languages, certifications, availability, work_modes, about, linkedin_url, cv_url, contact_email, updated_at";
+
+interface RecruiterRow {
+  user_id: string;
+  name: string;
+  company: string;
+  role: string;
+  linkedin_url: string;
+  status: RecruiterAccess["status"];
+  created_at: string;
+}
+
+const toRecruiter = (r: RecruiterRow): RecruiterAccess => ({
+  userId: r.user_id,
+  name: r.name,
+  company: r.company,
+  role: r.role,
+  linkedinUrl: r.linkedin_url,
+  status: r.status,
+  createdAt: r.created_at,
+});
 
 const SITUATION_COLUMNS = "id, playbook_id, answers, note, status, created_at, updated_at";
 
@@ -333,6 +402,76 @@ export function createSupabaseBackend(url: string, anonKey: string): Backend {
         .from("opportunity_alerts")
         .upsert({ user_id: userId, enabled: alerts.enabled, seen: alerts.seen.slice(-500), updated_at: new Date().toISOString() });
       if (error) throw new BackendError("generic", error.message);
+    },
+
+    async getTalentProfile(userId) {
+      const { data, error } = await sb.from("talent_profiles").select(TALENT_COLUMNS).eq("user_id", userId).maybeSingle();
+      if (error) throw new BackendError("generic", error.message);
+      return data ? toTalent(data as TalentRow) : null;
+    },
+
+    async saveTalentProfile(userId, p) {
+      const { data, error } = await sb
+        .from("talent_profiles")
+        .upsert({
+          user_id: userId,
+          visible: p.visible,
+          share_cv: p.shareCv,
+          name: p.name,
+          headline: p.headline,
+          city: p.city,
+          career_stage: p.careerStage,
+          areas: p.areas,
+          program: p.program,
+          education: p.education,
+          graduation_year: p.graduationYear,
+          languages: p.languages,
+          certifications: p.certifications,
+          availability: p.availability,
+          work_modes: p.workModes,
+          about: p.about,
+          linkedin_url: p.linkedinUrl,
+          cv_url: p.cvUrl,
+          contact_email: p.contactEmail,
+          updated_at: new Date().toISOString(),
+        })
+        .select(TALENT_COLUMNS)
+        .single();
+      if (error) throw new BackendError("generic", error.message);
+      return toTalent(data as TalentRow);
+    },
+
+    async deleteTalentProfile(userId) {
+      const { error } = await sb.from("talent_profiles").delete().eq("user_id", userId);
+      if (error) throw new BackendError("generic", error.message);
+    },
+
+    async searchTalents() {
+      // Security-definer function: returns rows only to approved leaders, only
+      // visible profiles, and blanks the CV link unless she chose to share it.
+      const { data, error } = await sb.rpc("search_talents");
+      if (error) throw new BackendError("generic", error.message);
+      return (data as TalentRow[]).map(toTalent);
+    },
+
+    async getRecruiterAccess(userId) {
+      const { data, error } = await sb
+        .from("talent_recruiters")
+        .select("user_id, name, company, role, linkedin_url, status, created_at")
+        .eq("user_id", userId)
+        .maybeSingle();
+      if (error) throw new BackendError("generic", error.message);
+      return data ? toRecruiter(data as RecruiterRow) : null;
+    },
+
+    async requestRecruiterAccess(userId, input) {
+      const { data, error } = await sb
+        .from("talent_recruiters")
+        .insert({ user_id: userId, name: input.name, company: input.company, role: input.role, linkedin_url: input.linkedinUrl })
+        .select("user_id, name, company, role, linkedin_url, status, created_at")
+        .single();
+      if (error) throw new BackendError("generic", error.message);
+      return toRecruiter(data as RecruiterRow);
     },
 
     async deleteAccount() {

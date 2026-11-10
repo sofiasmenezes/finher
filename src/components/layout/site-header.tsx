@@ -14,8 +14,10 @@ export function SiteHeader() {
 
   const links = [
     { href: "#about", label: t.nav.about },
+    { href: "#historia", label: t.nav.story },
     { href: "#how", label: t.nav.howItWorks },
     { href: "#universities", label: t.nav.forUniversities },
+    { href: "#talentos", label: t.nav.talents },
     { href: "#faq", label: t.nav.faq },
   ];
 
@@ -23,7 +25,7 @@ export function SiteHeader() {
     <header className="sticky top-[env(safe-area-inset-top,0px)] z-40 border-b border-transparent bg-background/85 backdrop-blur supports-[backdrop-filter]:bg-background/70">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
         <Logo />
-        <nav aria-label={t.nav.mainLabel} className="hidden md:block">
+        <nav aria-label={t.nav.mainLabel} className="hidden lg:block">
           <ul className="flex items-center gap-1">
             {links.map((l) => (
               <li key={l.href}>
@@ -53,7 +55,7 @@ export function SiteHeader() {
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden"
+            className="lg:hidden"
             aria-expanded={open}
             aria-controls="mobile-nav"
             aria-label={open ? t.nav.closeMenu : t.nav.openMenu}
@@ -64,7 +66,7 @@ export function SiteHeader() {
         </div>
       </div>
       {open && (
-        <nav id="mobile-nav" aria-label={t.nav.mainLabel} className="border-t bg-background px-4 pb-5 pt-2 md:hidden">
+        <nav id="mobile-nav" aria-label={t.nav.mainLabel} className="border-t bg-background px-4 pb-5 pt-2 lg:hidden">
           <ul className="flex flex-col">
             {links.map((l) => (
               <li key={l.href}>

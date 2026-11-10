@@ -8,6 +8,7 @@ import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { useT } from "@/i18n";
 import { backend, BackendError } from "@/lib/backend";
+import { useNextPath } from "@/lib/routes";
 
 function AuthLayout({ title, subtitle, children }: { title: string; subtitle: string; children: ReactNode }) {
   const t = useT();
@@ -49,6 +50,7 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export function SignupPage() {
   const t = useT();
   const navigate = useNavigate();
+  const nextPath = useNextPath();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -75,7 +77,7 @@ export function SignupPage() {
     try {
       const res = await backend.signUp({ email: email.trim(), password, displayName: name.trim() });
       if (res.needsEmailConfirmation) setInfo(t.auth.checkEmail);
-      else navigate("/onboarding");
+      else navigate(nextPath ?? "/onboarding");
     } catch (err) {
       if (err instanceof BackendError && err.code === "emailTaken") {
         setFormError(
@@ -141,7 +143,7 @@ export function SignupPage() {
           </Button>
           <p className="text-center text-sm text-muted-foreground">
             {t.auth.haveAccount}{" "}
-            <Link to="/login" className="font-semibold text-primary underline-offset-4 hover:underline">
+            <Link to={nextPath ? `/login?next=${nextPath}` : "/login"} className="font-semibold text-primary underline-offset-4 hover:underline">
               {t.auth.toLogin}
             </Link>
           </p>
@@ -154,6 +156,7 @@ export function SignupPage() {
 export function LoginPage() {
   const t = useT();
   const navigate = useNavigate();
+  const nextPath = useNextPath();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -169,7 +172,7 @@ export function LoginPage() {
     setBusy(true);
     try {
       await backend.signIn(email.trim(), password);
-      navigate("/app");
+      navigate(nextPath ?? "/app");
     } catch (err) {
       setError(err instanceof BackendError && err.code === "invalidCredentials" ? t.auth.errors.invalidCredentials : t.auth.errors.generic);
     } finally {
@@ -199,7 +202,7 @@ export function LoginPage() {
         </Button>
         <p className="text-center text-sm text-muted-foreground">
           {t.auth.noAccount}{" "}
-          <Link to="/signup" className="font-semibold text-primary underline-offset-4 hover:underline">
+          <Link to={nextPath ? `/signup?next=${nextPath}` : "/signup"} className="font-semibold text-primary underline-offset-4 hover:underline">
             {t.auth.toSignup}
           </Link>
         </p>

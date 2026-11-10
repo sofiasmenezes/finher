@@ -1,4 +1,5 @@
-import { DEFAULT_ALERTS, type AppUser, type MaterialRecommendation, type OnboardingAnswers, type OpportunityAlerts, type Profile, type SavedSituation, type TherapistRecommendation } from "@/lib/domain";
+import { SAMPLE_TALENTS } from "@/content/catalog";
+import { DEFAULT_ALERTS, publicTalent, type AppUser, type RecruiterAccess, type TalentProfile, type MaterialRecommendation, type OnboardingAnswers, type OpportunityAlerts, type Profile, type SavedSituation, type TherapistRecommendation } from "@/lib/domain";
 import { BackendError, type Backend } from "./types";
 
 /**
@@ -14,6 +15,9 @@ const checklistKey = (id: string) => `elevar-demo-checklist-${id}`;
 const THERAPISTS_KEY = "finher-demo-therapists";
 const MATERIALS_KEY = "finher-demo-materials";
 const alertsKey = (id: string) => `finher-demo-alerts-${id}`;
+/** Shared by every demo account in this browser, like the real talent bank. */
+const TALENTS_KEY = "finher-demo-talents";
+const recruiterKey = (id: string) => `finher-demo-recruiter-${id}`;
 
 interface StoredUser {
   id: string;
@@ -209,6 +213,41 @@ export function createDemoBackend(): Backend {
       write(alertsKey(userId), alerts);
     },
 
+    async getTalentProfile(userId) {
+      return read<TalentProfile[]>(TALENTS_KEY, []).find((p) => p.userId === userId) ?? null;
+    },
+
+    async saveTalentProfile(userId, input) {
+      await delay();
+      const saved: TalentProfile = { ...input, userId, updatedAt: new Date().toISOString() };
+      write(TALENTS_KEY, [saved, ...read<TalentProfile[]>(TALENTS_KEY, []).filter((p) => p.userId !== userId)]);
+      return saved;
+    },
+
+    async deleteTalentProfile(userId) {
+      write(TALENTS_KEY, read<TalentProfile[]>(TALENTS_KEY, []).filter((p) => p.userId !== userId));
+    },
+
+    async searchTalents() {
+      await delay();
+      const u = currentUser();
+      if (!u || read<RecruiterAccess | null>(recruiterKey(u.id), null)?.status !== "approved") return [];
+      const real = read<TalentProfile[]>(TALENTS_KEY, []).filter((p) => p.visible);
+      return [...real, ...SAMPLE_TALENTS].map(publicTalent);
+    },
+
+    async getRecruiterAccess(userId) {
+      return read<RecruiterAccess | null>(recruiterKey(userId), null);
+    },
+
+    async requestRecruiterAccess(userId, input) {
+      await delay();
+      // There is no team to review requests in the demo, so they are approved right away.
+      const access: RecruiterAccess = { ...input, userId, status: "approved", createdAt: new Date().toISOString() };
+      write(recruiterKey(userId), access);
+      return access;
+    },
+
     async deleteAccount() {
       const u = currentUser();
       if (!u) return;
@@ -221,6 +260,8 @@ export function createDemoBackend(): Backend {
       write(THERAPISTS_KEY, read<TherapistRecommendation[]>(THERAPISTS_KEY, []).filter((r) => r.authorId !== u.id));
       write(MATERIALS_KEY, read<MaterialRecommendation[]>(MATERIALS_KEY, []).filter((r) => r.authorId !== u.id));
       localStorage.removeItem(alertsKey(u.id));
+      write(TALENTS_KEY, read<TalentProfile[]>(TALENTS_KEY, []).filter((p) => p.userId !== u.id));
+      localStorage.removeItem(recruiterKey(u.id));
       localStorage.removeItem(SESSION_KEY);
       emit(null);
     },

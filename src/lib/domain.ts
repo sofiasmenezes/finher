@@ -174,7 +174,7 @@ export const DEFAULT_ALERTS: OpportunityAlerts = { enabled: false, seen: [] };
 
 /* ---------------- Material recommendations (shared with the community) ---------------- */
 
-export const MATERIAL_TYPES = ["book", "podcast", "course", "video", "newsletter", "article", "other"] as const;
+export const MATERIAL_TYPES = ["book", "podcast", "course", "video", "author", "newsletter", "article", "other"] as const;
 export type MaterialType = (typeof MATERIAL_TYPES)[number];
 
 export const MATERIAL_TOPICS = [
@@ -207,3 +207,130 @@ export interface MaterialRecommendation {
 }
 
 export type MaterialRecommendationInput = Omit<MaterialRecommendation, "id" | "authorId" | "createdAt" | "curated">;
+
+/* ---------------- Talent bank (opt-in, for leaders hiring in the market) ---------------- */
+
+export const TALENT_AVAILABILITY = ["internship", "trainee", "fullTime", "partTime", "freelance"] as const;
+export type TalentAvailability = (typeof TALENT_AVAILABILITY)[number];
+
+export const WORK_MODES = ["inPerson", "hybrid", "remote"] as const;
+export type WorkMode = (typeof WORK_MODES)[number];
+
+/** Languages besides Portuguese. */
+export const TALENT_LANGUAGES = ["en", "es", "fr", "de", "it", "zh"] as const;
+export type TalentLanguage = (typeof TALENT_LANGUAGES)[number];
+
+export const CERTIFICATIONS = ["cpa10", "cpa20", "cea", "cfp", "ancord", "cnpi", "cga", "cfa"] as const;
+export type Certification = (typeof CERTIFICATIONS)[number];
+
+/**
+ * Her profile in the talent bank. Nothing is shown to anyone unless she turns
+ * `visible` on, and her CV link only when she also turns `shareCv` on.
+ */
+export interface TalentProfile {
+  userId: string;
+  visible: boolean;
+  shareCv: boolean;
+  name: string;
+  headline: string;
+  city: string;
+  careerStage: CareerStageId;
+  areas: AreaId[];
+  program: ProgramId | "";
+  education: string;
+  graduationYear: number | null;
+  languages: TalentLanguage[];
+  certifications: Certification[];
+  availability: TalentAvailability[];
+  workModes: WorkMode[];
+  about: string;
+  linkedinUrl: string;
+  /** Link to her CV (PDF on Drive, Dropbox…). Shown only when shareCv is on. */
+  cvUrl: string;
+  contactEmail: string;
+  updatedAt: string;
+  /** Fictional entries shown in demo mode; always labeled in the UI. */
+  sample?: boolean;
+}
+
+export type TalentProfileInput = Omit<TalentProfile, "userId" | "updatedAt" | "sample">;
+
+/** A leader asking to search the talent bank. The FinHer team approves each request. */
+export interface RecruiterAccess {
+  userId: string;
+  name: string;
+  company: string;
+  role: string;
+  linkedinUrl: string;
+  status: "pending" | "approved" | "rejected";
+  createdAt: string;
+}
+
+export type RecruiterAccessInput = Pick<RecruiterAccess, "name" | "company" | "role" | "linkedinUrl">;
+
+/** Filters a leader can combine when searching. Empty means "any". */
+export interface TalentFilters {
+  q: string;
+  areas: AreaId[];
+  stages: CareerStageId[];
+  programs: ProgramId[];
+  languages: TalentLanguage[];
+  certifications: Certification[];
+  availability: TalentAvailability[];
+  workModes: WorkMode[];
+  city: string;
+  withCv: boolean;
+}
+
+export const EMPTY_TALENT_FILTERS: TalentFilters = {
+  q: "",
+  areas: [],
+  stages: [],
+  programs: [],
+  languages: [],
+  certifications: [],
+  availability: [],
+  workModes: [],
+  city: "",
+  withCv: false,
+};
+
+const norm = (s: string) =>
+  s
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .toLowerCase()
+    .trim();
+
+const anyOf = <T>(wanted: T[], has: T[]) => wanted.length === 0 || wanted.some((w) => has.includes(w));
+
+/**
+ * Which visible profiles match the filters. Within one filter any option matches
+ * (área A ou B); different filters must all match (área E idioma).
+ */
+export function filterTalents(list: TalentProfile[], f: TalentFilters): TalentProfile[] {
+  const words = norm(f.q).split(/\s+/).filter(Boolean);
+  const city = norm(f.city);
+  return list.filter((p) => {
+    if (!p.visible) return false;
+    if (!anyOf(f.areas, p.areas)) return false;
+    if (f.stages.length && !f.stages.includes(p.careerStage)) return false;
+    if (f.programs.length && (!p.program || !f.programs.includes(p.program))) return false;
+    if (!f.languages.every((l) => p.languages.includes(l))) return false;
+    if (!anyOf(f.certifications, p.certifications)) return false;
+    if (!anyOf(f.availability, p.availability)) return false;
+    if (!anyOf(f.workModes, p.workModes)) return false;
+    if (city && !norm(p.city).includes(city)) return false;
+    if (f.withCv && !(p.shareCv && p.cvUrl)) return false;
+    if (words.length) {
+      const text = norm([p.name, p.headline, p.education, p.about, p.city].join(" "));
+      if (!words.every((w) => text.includes(w))) return false;
+    }
+    return true;
+  });
+}
+
+/** What a leader may see: the CV link disappears unless she chose to share it. */
+export function publicTalent(p: TalentProfile): TalentProfile {
+  return p.shareCv ? p : { ...p, cvUrl: "" };
+}

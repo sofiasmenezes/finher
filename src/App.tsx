@@ -6,7 +6,7 @@ import { DemoBanner, DisclaimerBar } from "@/components/layout/disclaimer-bar";
 import { Button } from "@/components/ui/button";
 import { useT } from "@/i18n";
 import { isOnboarded } from "@/lib/domain";
-import { paths } from "@/lib/routes";
+import { paths, useNextPath } from "@/lib/routes";
 import Landing from "@/pages/landing";
 
 // Every page but the landing page loads on demand, so the first visit only downloads what it shows.
@@ -33,6 +33,8 @@ const MaterialsPage = named(() => import("@/pages/materials"), "MaterialsPage");
 const SoftSkillsPage = named(() => import("@/pages/soft-skills"), "SoftSkillsPage");
 const SoftSkillPage = named(() => import("@/pages/soft-skills"), "SoftSkillPage");
 const AssistantPage = lazy(() => import("@/pages/assistant"));
+const TalentProfilePage = named(() => import("@/pages/talents"), "TalentProfilePage");
+const TalentSearchPage = named(() => import("@/pages/talents"), "TalentSearchPage");
 import { AuthProvider, useAuth } from "@/providers/auth";
 import { ThemeProvider } from "@/providers/theme";
 
@@ -55,8 +57,9 @@ function RequireAuth({ children }: { children: ReactNode }) {
 
 function GuestOnly({ children }: { children: ReactNode }) {
   const { user, loading } = useAuth();
+  const next = useNextPath();
   if (loading) return <FullPageLoader />;
-  if (user) return <Navigate to="/app" replace />;
+  if (user) return <Navigate to={next ?? "/app"} replace />;
   return <>{children}</>;
 }
 
@@ -118,6 +121,7 @@ function Chrome() {
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/quem-somos" element={<Landing />} />
+          <Route path="/talentos" element={<TalentSearchPage />} />
           <Route path="/signup" element={<GuestOnly><SignupPage /></GuestOnly>} />
           <Route path="/login" element={<GuestOnly><LoginPage /></GuestOnly>} />
           <Route path="/onboarding" element={<RequireAuth><Onboarding /></RequireAuth>} />
@@ -139,6 +143,7 @@ function Chrome() {
             <Route path="community" element={<CommunityPage />} />
             <Route path="community/opportunities" element={<OpportunitiesPage />} />
             <Route path="community/materials" element={<MaterialsPage />} />
+            <Route path="talentos" element={<TalentProfilePage />} />
             <Route path="education" element={<Navigate to={paths.learn} replace />} />
             <Route path="education/areas/:id" element={<LegacyRedirect to={(p) => paths.area(p.id!)} />} />
             <Route path="education/topics/:id" element={<LegacyRedirect to={(p) => paths.topic(p.id!)} />} />

@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, BadgeCheck, EyeOff, Lock, ShieldCheck, Wallet, type LucideIcon } from "lucide-react";
+import { ArrowRight, BadgeCheck, EyeOff, Lock, SearchCheck, ShieldCheck, Wallet, type LucideIcon } from "lucide-react";
+import teamPhoto from "@/assets/equipe-finher.jpg";
 import { Logo } from "@/components/layout/logo";
 import { SiteHeader } from "@/components/layout/site-header";
 import { Button } from "@/components/ui/button";
@@ -110,6 +111,43 @@ export default function Landing() {
                 </li>
               ))}
             </ol>
+          </div>
+        </section>
+
+        {/* Our story: who built FinHer and what pushed it forward */}
+        <section id="historia" className="scroll-mt-20 border-t" aria-labelledby="story-title">
+          <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1fr_1.1fr] lg:gap-16 lg:py-24">
+            <div>
+              <Eyebrow>{L.story.eyebrow}</Eyebrow>
+              <h2 id="story-title" className="mt-4 text-4xl font-light leading-[1.1] sm:text-5xl">
+                <HeroTitle text={L.story.title} />
+              </h2>
+              {L.story.body.map((p) => (
+                <p key={p} className="mt-5 max-w-xl text-lg leading-relaxed text-muted-foreground">
+                  {p}
+                </p>
+              ))}
+              <p className="label-mono mt-8 text-muted-foreground">{L.story.foundersLabel}</p>
+              <ul className="mt-3 flex flex-wrap gap-2">
+                {L.story.founders.map((name) => (
+                  <li key={name} className="rounded-full border bg-card px-3.5 py-1.5 text-sm font-medium">
+                    {name}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <figure>
+              <img
+                src={teamPhoto}
+                alt={L.story.photoAlt}
+                width={1200}
+                height={678}
+                loading="lazy"
+                decoding="async"
+                className="aspect-[1200/678] w-full rounded-2xl border object-cover shadow-[0_24px_48px_-24px_rgb(42_15_34/0.25)]"
+              />
+              <figcaption className="mt-3 text-sm text-muted-foreground">{L.story.caption}</figcaption>
+            </figure>
           </div>
         </section>
 
@@ -238,6 +276,35 @@ export default function Landing() {
               {L.universities.items.map((item) => (
                 <li key={item} className="flex items-start gap-3 border-b py-4 first:border-t">
                   <BadgeCheck className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden="true" />
+                  <span className="text-lg font-medium">{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        {/* Talent bank: for leaders hiring in the financial market */}
+        <section id="talentos" className="scroll-mt-20 bg-navy text-navy-foreground" aria-labelledby="talent-title">
+          <div className="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:gap-16 lg:py-24">
+            <div>
+              <Eyebrow onDark>{L.talentBank.eyebrow}</Eyebrow>
+              <h2 id="talent-title" className="mt-4 text-4xl font-light sm:text-5xl">
+                {L.talentBank.title}
+              </h2>
+              <p className="mt-5 text-lg text-navy-foreground/80">{L.talentBank.body}</p>
+              <div className="mt-8">
+                <Button asChild size="lg" variant="secondary">
+                  <Link to="/talentos">
+                    {L.talentBank.cta} <ArrowRight />
+                  </Link>
+                </Button>
+                <p className="mt-3 max-w-md text-sm text-navy-foreground/70">{L.talentBank.candidateNote}</p>
+              </div>
+            </div>
+            <ul className="self-center">
+              {L.talentBank.items.map((item) => (
+                <li key={item} className="flex items-start gap-3 border-b border-white/15 py-4 first:border-t">
+                  <SearchCheck className="mt-0.5 size-5 shrink-0 text-cta" aria-hidden="true" />
                   <span className="text-lg font-medium">{item}</span>
                 </li>
               ))}

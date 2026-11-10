@@ -10,6 +10,10 @@ import type {
   MaterialRecommendation,
   MaterialRecommendationInput,
   OpportunityAlerts,
+  RecruiterAccess,
+  RecruiterAccessInput,
+  TalentProfile,
+  TalentProfileInput,
 } from "@/lib/domain";
 
 export type BackendErrorCode = "invalidCredentials" | "emailTaken" | "generic";
@@ -39,6 +43,8 @@ export interface DataExport {
   therapistRecommendations: TherapistRecommendation[];
   materialRecommendations: MaterialRecommendation[];
   opportunityAlerts: OpportunityAlerts;
+  talentProfile: TalentProfile | null;
+  recruiterAccess: RecruiterAccess | null;
 }
 
 /**
@@ -80,18 +86,29 @@ export interface Backend {
   getOpportunityAlerts(userId: string): Promise<OpportunityAlerts>;
   setOpportunityAlerts(userId: string, alerts: OpportunityAlerts): Promise<void>;
 
+  /** Her own talent-bank profile (null until she creates one). */
+  getTalentProfile(userId: string): Promise<TalentProfile | null>;
+  saveTalentProfile(userId: string, input: TalentProfileInput): Promise<TalentProfile>;
+  deleteTalentProfile(userId: string): Promise<void>;
+  /** Visible profiles, for approved leaders only (CV links only when shared). */
+  searchTalents(): Promise<TalentProfile[]>;
+  getRecruiterAccess(userId: string): Promise<RecruiterAccess | null>;
+  requestRecruiterAccess(userId: string, input: RecruiterAccessInput): Promise<RecruiterAccess>;
+
   deleteAccount(): Promise<void>;
 }
 
 /** Built from the other calls so both implementations export the same shape. */
 export async function exportData(b: Backend, user: AppUser): Promise<DataExport> {
-  const [profile, savedSituations, careerFamilyChecklist, recommendations, materials, opportunityAlerts] = await Promise.all([
+  const [profile, savedSituations, careerFamilyChecklist, recommendations, materials, opportunityAlerts, talentProfile, recruiterAccess] = await Promise.all([
     b.getProfile(user.id),
     b.listSituations(user.id),
     b.getChecklist(user.id),
     b.listTherapistRecommendations(),
     b.listMaterials(),
     b.getOpportunityAlerts(user.id),
+    b.getTalentProfile(user.id),
+    b.getRecruiterAccess(user.id),
   ]);
   const therapistRecommendations = recommendations.filter((r) => r.authorId === user.id);
   const materialRecommendations = materials.filter((m) => m.authorId === user.id);
@@ -104,5 +121,7 @@ export async function exportData(b: Backend, user: AppUser): Promise<DataExport>
     therapistRecommendations,
     materialRecommendations,
     opportunityAlerts,
+    talentProfile,
+    recruiterAccess,
   };
 }

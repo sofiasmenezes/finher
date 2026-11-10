@@ -1,6 +1,6 @@
 # FinHer
 
-Plataforma educativa para apoiar, informar e conectar mulheres que querem entrar, permanecer ou crescer no mercado financeiro. Projeto acadêmico independente. Não faz operações, não guarda dinheiro e não recomenda investimentos.
+Plataforma educativa para apoiar, informar e conectar mulheres que querem entrar, permanecer ou crescer no mercado financeiro. Projeto independente. Não faz operações, não guarda dinheiro e não recomenda investimentos.
 
 **Seções:** Meu caminho, Assistente FinHer (IA), Trilha, Desafios (com Apoio psicológico), Soft skills, Carreira e família, Histórias e Comunidade (em breve). A página inicial tem a seção Quem somos. O idioma padrão é português do Brasil.
 
@@ -35,6 +35,16 @@ O comportamento da assistente (tom, limites, quando indicar o CVV) fica no texto
 - **Calendário de oportunidades** (`/app/community/opportunities`): lê os arquivos de `content/opportunities/`. Os alertas são dentro do site (sino no topo) e cada oportunidade pode ir para a agenda do celular com um arquivo `.ics` que já traz lembrete.
 - **Indicação de materiais** (`/app/community/materials`): a seleção da equipe fica em `TEAM_MATERIALS` (`src/content/catalog.ts`); as indicações das usuárias ficam na tabela `material_recommendations`.
 - Com o Supabase, rode `supabase/migrations/0005_materials_and_alerts.sql`.
+
+## Trilha: indicações de materiais
+
+Nesta fase o FinHer não tem aulas próprias. Cada tema da trilha lista livros, videoaulas, cursos e autoras e autores externos, em `TRAILS` (`src/content/catalog.ts`). Para trocar uma indicação, edite a lista `materials` do tema.
+
+## Banco de talentos
+
+- **Usuárias** (`/app/talentos`): o perfil começa oculto. Ela escolhe se aparece nas buscas e, separadamente, se mostra o link do currículo. Pode ocultar ou apagar quando quiser.
+- **Lideranças** (`/talentos`): criam uma conta e pedem acesso. A equipe aprova no Supabase mudando `status` para `approved` na tabela `talent_recruiters`. Só lideranças aprovadas recebem perfis, pela função `search_talents`, que esconde o currículo de quem não quis mostrar.
+- Com o Supabase, rode `supabase/migrations/0006_talent_bank.sql`. No modo de demonstração o acesso é liberado na hora e aparecem perfis de exemplo.
 
 ## Publicar na Vercel
 

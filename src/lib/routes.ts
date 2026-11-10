@@ -1,3 +1,5 @@
+import { useSearchParams } from "react-router-dom";
+
 /** Every in-app path in one place, so the navigation can change without hunting for links. */
 export const paths = {
   home: "/app",
@@ -17,5 +19,17 @@ export const paths = {
   community: "/app/community",
   opportunities: "/app/community/opportunities",
   materials: "/app/community/materials",
+  talents: "/app/talentos",
+  /** Public page where approved leaders search the talent bank. */
+  talentSearch: "/talentos",
   settings: "/app/settings",
 } as const;
+
+/** Pages a login or signup may send her back to (?next=…). Anything else is ignored. */
+const NEXT_ALLOWED = [paths.talentSearch];
+
+export function useNextPath(): string | null {
+  const [params] = useSearchParams();
+  const next = params.get("next");
+  return next && (NEXT_ALLOWED as string[]).includes(next) ? next : null;
+}

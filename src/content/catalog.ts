@@ -1,16 +1,37 @@
 /**
  * Seed content used by the personalized recommendations. In later phases this
- * moves into Supabase tables (trails, lessons, mentors, groups); the shapes match.
+ * moves into Supabase tables (trails, materials, mentors, groups); the shapes match.
  * Mentor and group entries are fictional sample data and are labeled as such.
  */
-import type { AreaId, CareerStageId, GoalId, MaterialRecommendation, SkillId, TherapistRecommendation } from "@/lib/domain";
+import type { AreaId, CareerStageId, GoalId, MaterialRecommendation, SkillId, TalentProfile, TherapistRecommendation } from "@/lib/domain";
+
+/** Kinds of material a trail can point to. Same ids as community materials. */
+export type TrailMaterialType = "book" | "video" | "course" | "author" | "article" | "podcast";
+
+/**
+ * An external material recommended by the FinHer team. FinHer has no lessons of its
+ * own yet, so each trail is a curated list of books, video lessons, courses and authors.
+ * Books without a link get a search link in the UI.
+ */
+export interface TrailMaterial {
+  id: string;
+  title: string;
+  /** Author, teacher or organization. */
+  creator: string;
+  type: TrailMaterialType;
+  why: string;
+  url?: string;
+  free?: boolean;
+  /** Only when it isn't Portuguese. */
+  language?: string;
+}
 
 export interface TrailMeta {
   id: string;
   title: string;
   summary: string;
-  lessons: number;
-  minutes: number;
+  /** External materials, in the order we suggest using them. */
+  materials: TrailMaterial[];
   /** Skills this trail develops, with how strongly (0–1). */
   skills: Partial<Record<SkillId, number>>;
   areas: AreaId[];
@@ -23,8 +44,33 @@ export const TRAILS: TrailMeta[] = [
     id: "market-map",
     title: "Como funciona o mercado financeiro",
     summary: "Quem faz o quê: bancos, gestoras, corretoras, reguladores e onde cada área se encaixa.",
-    lessons: 4,
-    minutes: 30,
+    materials: [
+      {
+        id: "b3-edu",
+        title: "Hub de educação da B3",
+        creator: "B3",
+        type: "course",
+        why: "Cursos curtos e gratuitos da própria bolsa para entender como o mercado funciona, do básico ao intermediário.",
+        url: "https://edu.b3.com.br/",
+        free: true,
+      },
+      {
+        id: "portal-investidor",
+        title: "Portal do Investidor",
+        creator: "CVM",
+        type: "article",
+        why: "O site educativo do regulador: conceitos, produtos e direitos explicados sem jargão.",
+        url: "https://www.gov.br/investidor/",
+        free: true,
+      },
+      {
+        id: "assaf-mercado",
+        title: "Mercado financeiro",
+        creator: "Alexandre Assaf Neto",
+        type: "book",
+        why: "Um panorama completo do sistema financeiro brasileiro, muito usado nas faculdades.",
+      },
+    ],
     skills: { macro: 0.4 },
     areas: ["notSure"],
     goals: ["understandMarket", "changeCareer"],
@@ -32,10 +78,33 @@ export const TRAILS: TrailMeta[] = [
   },
   {
     id: "financial-statements",
-    title: "Leitura de demonstrações financeiras na prática",
-    summary: "DRE, balanço e fluxo de caixa lidos como uma analista, com balanços no estilo real.",
-    lessons: 4,
-    minutes: 32,
+    title: "Leitura de demonstrações financeiras",
+    summary: "DRE, balanço e fluxo de caixa lidos como uma analista.",
+    materials: [
+      {
+        id: "fea-contabilidade",
+        title: "Contabilidade introdutória",
+        creator: "Equipe de professores da FEA-USP",
+        type: "book",
+        why: "A base de contabilidade que toda analista usa, com exercícios.",
+      },
+      {
+        id: "wharton-accounting",
+        title: "Introduction to Financial Accounting",
+        creator: "Wharton School (Coursera)",
+        type: "course",
+        why: "Videoaulas que mostram como ler e montar as demonstrações. Dá para assistir de graça no modo ouvinte.",
+        url: "https://www.coursera.org/learn/wharton-accounting",
+        language: "Inglês, com legendas",
+      },
+      {
+        id: "assaf-balancos",
+        title: "Estrutura e análise de balanços",
+        creator: "Alexandre Assaf Neto",
+        type: "book",
+        why: "Indicadores, margens e análise de empresas brasileiras na prática.",
+      },
+    ],
     skills: { statements: 1 },
     areas: ["research", "investmentBanking", "corporateFinance", "privateEquity"],
     goals: ["getInternship", "firstJob"],
@@ -43,19 +112,77 @@ export const TRAILS: TrailMeta[] = [
   {
     id: "valuation",
     title: "Análise fundamentalista e valuation",
-    summary: "Monte um DCF do zero, confira com múltiplos e defenda suas premissas.",
-    lessons: 4,
-    minutes: 38,
+    summary: "Fluxo de caixa descontado, múltiplos e como defender suas premissas.",
+    materials: [
+      {
+        id: "damodaran",
+        title: "Aswath Damodaran",
+        creator: "Professor de finanças da NYU Stern",
+        type: "author",
+        why: "Referência mundial em valuation. Publica aulas completas, planilhas e dados de graça no site dele.",
+        url: "https://pages.stern.nyu.edu/~adamodar/",
+        free: true,
+        language: "Inglês",
+      },
+      {
+        id: "damodaran-valuation",
+        title: "Valuation: como avaliar empresas e escolher as melhores ações",
+        creator: "Aswath Damodaran",
+        type: "book",
+        why: "A porta de entrada para o método do Damodaran, em linguagem acessível.",
+      },
+      {
+        id: "mckinsey-valuation",
+        title: "Valuation: Measuring and Managing the Value of Companies",
+        creator: "McKinsey & Company (Tim Koller, Marc Goedhart e David Wessels)",
+        type: "book",
+        why: "O manual de referência dos bancos e consultorias para quem quer se aprofundar.",
+        language: "Inglês",
+      },
+    ],
     skills: { valuation: 1, statements: 0.4 },
     areas: ["research", "investmentBanking", "privateEquity", "assetManagement"],
     goals: ["getInternship", "grow"],
   },
   {
     id: "macro",
-    title: "Macroeconomia para investidoras",
+    title: "Macroeconomia para o mercado",
     summary: "Como juros, inflação e câmbio movem os ativos, e como ler uma ata do Copom.",
-    lessons: 5,
-    minutes: 40,
+    materials: [
+      {
+        id: "dalio-machine",
+        title: "Como funciona a máquina econômica",
+        creator: "Ray Dalio",
+        type: "video",
+        why: "Em 30 minutos de animação, crédito, dívida e ciclos econômicos ficam claros.",
+        url: "https://www.youtube.com/watch?v=PHe0bXAIuk0",
+        free: true,
+        language: "Inglês, com legendas em português",
+      },
+      {
+        id: "bcb-copom",
+        title: "Copom: o que é e como decide os juros",
+        creator: "Banco Central do Brasil",
+        type: "article",
+        why: "A fonte oficial sobre a Selic, com as atas e os comunicados de cada reunião.",
+        url: "https://www.bcb.gov.br/controleinflacao/copom",
+        free: true,
+      },
+      {
+        id: "mankiw-macro",
+        title: "Macroeconomia",
+        creator: "N. Gregory Mankiw",
+        type: "book",
+        why: "O livro-texto clássico para firmar os conceitos.",
+      },
+      {
+        id: "zeina-latif",
+        title: "Zeina Latif",
+        creator: "Economista, autora de \"Nós do Brasil\"",
+        type: "author",
+        why: "Uma das economistas mais ouvidas do país. Escreve sobre a economia brasileira de um jeito acessível.",
+      },
+    ],
     skills: { macro: 1 },
     areas: ["trading", "assetManagement", "wealthManagement", "research"],
     goals: ["understandMarket", "investOwn"],
@@ -63,9 +190,32 @@ export const TRAILS: TrailMeta[] = [
   {
     id: "portfolio",
     title: "Teoria de carteiras aplicada",
-    summary: "Risco, retorno e diversificação com números reais: volatilidade, correlação, índice de Sharpe.",
-    lessons: 5,
-    minutes: 42,
+    summary: "Risco, retorno e diversificação: volatilidade, correlação e índice de Sharpe.",
+    materials: [
+      {
+        id: "shiller-markets",
+        title: "Financial Markets",
+        creator: "Robert Shiller, Universidade Yale (Coursera)",
+        type: "course",
+        why: "Videoaulas de um prêmio Nobel sobre risco, mercados e instituições. Gratuito no modo ouvinte.",
+        url: "https://www.coursera.org/learn/financial-markets-global",
+        language: "Inglês, com legendas",
+      },
+      {
+        id: "bkm-investimentos",
+        title: "Investimentos",
+        creator: "Zvi Bodie, Alex Kane e Alan J. Marcus",
+        type: "book",
+        why: "O livro-texto de referência em teoria de carteiras, usado no CFA e no mestrado.",
+      },
+      {
+        id: "malkiel-passeio",
+        title: "Um passeio aleatório por Wall Street",
+        creator: "Burton G. Malkiel",
+        type: "book",
+        why: "Diversificação e eficiência de mercado contadas de forma leve.",
+      },
+    ],
     skills: { portfolio: 1 },
     areas: ["assetManagement", "wealthManagement", "trading", "riskCompliance"],
     goals: ["investOwn", "certification"],
@@ -73,9 +223,42 @@ export const TRAILS: TrailMeta[] = [
   {
     id: "excel-python",
     title: "Excel e Python para finanças",
-    summary: "Modelos que não quebram: planilhas limpas e, depois, pandas para retornos e risco.",
-    lessons: 6,
-    minutes: 55,
+    summary: "Planilhas limpas e, depois, Python para analisar dados de mercado.",
+    materials: [
+      {
+        id: "ev-excel",
+        title: "Cursos de Excel da Escola Virtual",
+        creator: "Fundação Bradesco",
+        type: "course",
+        why: "Cursos gratuitos, do básico ao avançado, com certificado.",
+        url: "https://www.ev.org.br/",
+        free: true,
+      },
+      {
+        id: "curso-em-video-python",
+        title: "Curso de Python",
+        creator: "Gustavo Guanabara (Curso em Vídeo)",
+        type: "video",
+        why: "Videoaulas gratuitas para quem nunca programou.",
+        url: "https://www.cursoemvideo.com/",
+        free: true,
+      },
+      {
+        id: "mckinney-python",
+        title: "Python para análise de dados",
+        creator: "Wes McKinney",
+        type: "book",
+        why: "Escrito pelo criador do pandas, a biblioteca mais usada para dados financeiros.",
+      },
+      {
+        id: "hilpisch-python",
+        title: "Python for Finance",
+        creator: "Yves Hilpisch",
+        type: "book",
+        why: "Retornos, risco e simulações em Python, com exemplos de mercado.",
+        language: "Inglês",
+      },
+    ],
     skills: { tools: 1 },
     areas: ["investmentBanking", "corporateFinance", "fintech", "riskCompliance", "trading"],
     goals: ["firstJob", "changeCareer", "grow"],
@@ -84,8 +267,32 @@ export const TRAILS: TrailMeta[] = [
     id: "personal-finance",
     title: "Finanças pessoais para começar bem",
     summary: "Orçamento, reserva de emergência, dívidas e como pensar nos primeiros investimentos.",
-    lessons: 4,
-    minutes: 28,
+    materials: [
+      {
+        id: "me-poupe",
+        title: "Me poupe! 10 passos para nunca mais faltar dinheiro no seu bolso",
+        creator: "Nathalia Arcuri",
+        type: "book",
+        why: "Organização financeira direta e sem culpa.",
+      },
+      {
+        id: "carol-sandler",
+        title: "Carol Sandler",
+        creator: "Criadora do Finanças Femininas",
+        type: "author",
+        why: "Educação financeira pensada para mulheres, com artigos e cursos.",
+        url: "https://financasfemininas.com.br/",
+      },
+      {
+        id: "bcb-cidadania",
+        title: "Cidadania Financeira",
+        creator: "Banco Central do Brasil",
+        type: "article",
+        why: "Cadernos e materiais gratuitos de educação financeira, de orçamento a crédito.",
+        url: "https://www.bcb.gov.br/cidadaniafinanceira",
+        free: true,
+      },
+    ],
     skills: { portfolio: 0.3 },
     areas: ["wealthManagement"],
     goals: ["investOwn", "understandMarket"],
@@ -94,14 +301,45 @@ export const TRAILS: TrailMeta[] = [
   {
     id: "careers",
     title: "Preparação para processos seletivos",
-    summary: "Currículo, entrevistas técnicas e comportamentais, cases e networking que não parece forçado.",
-    lessons: 5,
-    minutes: 45,
+    summary: "Currículo, entrevistas técnicas e comportamentais, cases e networking.",
+    materials: [
+      {
+        id: "rosenbaum-ib",
+        title: "Investment Banking: Valuation, LBOs, M&A, and IPOs",
+        creator: "Joshua Rosenbaum e Joshua Pearl",
+        type: "book",
+        why: "O livro que muita gente usa para se preparar para entrevistas técnicas de banco.",
+        language: "Inglês",
+      },
+      {
+        id: "sandberg-ted",
+        title: "Por que temos poucas mulheres líderes",
+        creator: "Sheryl Sandberg (TED)",
+        type: "video",
+        why: "Uma palestra curta sobre ocupar espaço desde o começo da carreira.",
+        url: "https://www.ted.com/talks/sheryl_sandberg_why_we_have_too_few_women_leaders",
+        free: true,
+        language: "Inglês, com legendas em português",
+      },
+      {
+        id: "faca-acontecer",
+        title: "Faça acontecer",
+        creator: "Sheryl Sandberg",
+        type: "book",
+        why: "Sobre negociar, se candidatar mesmo sem cumprir todos os requisitos e liderar.",
+      },
+    ],
     skills: { interviews: 1 },
     areas: ["investmentBanking", "research", "assetManagement", "privateEquity", "wealthManagement"],
     goals: ["getInternship", "firstJob", "changeCareer"],
   },
 ];
+
+/** Search link for a book (or anything) that has no official link. */
+export function searchUrl(m: Pick<TrailMaterial, "title" | "creator" | "type">) {
+  const q = encodeURIComponent(`${m.title} ${m.creator}`);
+  return m.type === "book" ? `https://www.google.com/search?tbm=bks&q=${q}` : `https://www.google.com/search?q=${q}`;
+}
 
 export interface MentorMeta {
   id: string;
@@ -366,4 +604,92 @@ export const TEAM_MATERIALS: MaterialRecommendation[] = [
     createdAt: "2026-11-01T12:00:08.000Z",
     curated: true,
   },
+];
+
+/**
+ * Fictional talent-bank profiles, shown only in demo mode so leaders can try the
+ * search. Always labeled "Perfil de exemplo" in the UI. Not real people.
+ */
+const sampleTalent = (p: Omit<TalentProfile, "visible" | "sample" | "updatedAt" | "contactEmail" | "linkedinUrl"> & { updatedAt?: string }): TalentProfile => ({
+  visible: true,
+  sample: true,
+  contactEmail: "",
+  linkedinUrl: "",
+  updatedAt: p.updatedAt ?? "2026-11-01T12:00:00.000Z",
+  ...p,
+});
+
+export const SAMPLE_TALENTS: TalentProfile[] = [
+  sampleTalent({
+    userId: "sample-talent-1",
+    shareCv: true,
+    name: "Beatriz A.",
+    headline: "Estudante de Economia buscando estágio em research de ações",
+    city: "São Paulo, SP",
+    careerStage: "internship",
+    areas: ["research", "assetManagement"],
+    program: "economics",
+    education: "Economia, 6º semestre",
+    graduationYear: 2028,
+    languages: ["en"],
+    certifications: ["cpa20"],
+    availability: ["internship"],
+    workModes: ["hybrid", "inPerson"],
+    about: "Membro da liga de mercado financeiro, onde cobre o setor elétrico. Gosto de modelagem em Excel e de escrever relatórios.",
+    cvUrl: "https://example.com/cv-exemplo.pdf",
+  }),
+  sampleTalent({
+    userId: "sample-talent-2",
+    shareCv: false,
+    name: "Juliana M.",
+    headline: "Engenheira em transição para risco e dados",
+    city: "Belo Horizonte, MG",
+    careerStage: "transition",
+    areas: ["riskCompliance", "fintech"],
+    program: "engineering",
+    education: "Engenharia de Produção, formada",
+    graduationYear: 2021,
+    languages: ["en", "es"],
+    certifications: [],
+    availability: ["fullTime"],
+    workModes: ["remote", "hybrid"],
+    about: "Cinco anos em operações na indústria. Python, SQL e estatística. Estudando para a CPA-20.",
+    cvUrl: "",
+  }),
+  sampleTalent({
+    userId: "sample-talent-3",
+    shareCv: true,
+    name: "Fernanda L.",
+    headline: "Analista de wealth management com CEA",
+    city: "Rio de Janeiro, RJ",
+    careerStage: "growing",
+    areas: ["wealthManagement", "assetManagement"],
+    program: "business",
+    education: "Administração",
+    graduationYear: 2019,
+    languages: ["en", "fr"],
+    certifications: ["cpa20", "cea"],
+    availability: ["fullTime"],
+    workModes: ["inPerson", "hybrid"],
+    about: "Atendo clientes de alta renda há quatro anos. Busco uma posição de especialista ou coordenação.",
+    cvUrl: "https://example.com/cv-exemplo.pdf",
+  }),
+  sampleTalent({
+    userId: "sample-talent-4",
+    shareCv: true,
+    name: "Carla S.",
+    headline: "Recém-formada em Contabilidade, interesse em M&A",
+    city: "Porto Alegre, RS",
+    careerStage: "earlyCareer",
+    areas: ["investmentBanking", "corporateFinance"],
+    program: "accounting",
+    education: "Ciências Contábeis",
+    graduationYear: 2025,
+    languages: ["en"],
+    certifications: [],
+    availability: ["trainee", "fullTime"],
+    workModes: ["inPerson"],
+    about: "Experiência em auditoria. Participei de um desafio de valuation universitário e quero ir para banco de investimento.",
+    cvUrl: "https://example.com/cv-exemplo.pdf",
+  }),
 ];

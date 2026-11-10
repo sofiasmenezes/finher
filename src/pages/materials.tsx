@@ -16,6 +16,7 @@ import {
   Plus,
   Sparkles,
   Trash2,
+  UserPen,
   Users,
   type LucideIcon,
 } from "lucide-react";
@@ -35,6 +36,7 @@ export const TYPE_ICONS: Record<MaterialType, LucideIcon> = {
   podcast: Headphones,
   course: GraduationCap,
   video: PlayCircle,
+  author: UserPen,
   newsletter: Mail,
   article: FileText,
   other: Package,
